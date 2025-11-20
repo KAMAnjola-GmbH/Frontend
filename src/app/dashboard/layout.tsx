@@ -1,9 +1,9 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
-import { inter } from '@/app/ui/fonts';
+import { inter } from '@/app/components/ui/fonts';
 import { Auth0Provider } from "@auth0/nextjs-auth0";
-import Navbar from '@/app/ui/components/navigation/Navbar'; // Import new Navbar component
-import Footer from '@/app/ui/components/Footer'; // Import new Footer component
+import Navbar from '@/app/components/ui/navigation/Navbar'; // Import new Navbar component
+import Footer from '@/app/components/ui/Footer'; // Import new Footer component
 import './globals.css'; // This is where your Tailwind styles are imported
 
 // Setup the Google Font

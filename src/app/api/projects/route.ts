@@ -15,7 +15,7 @@ export async function GET() {
     const accessToken = session.tokenSet.accessToken;
 
     // Call your backend securely
-    const backendRes = await fetch('http://localhost:5256/api/projects', {
+    const backendRes = await fetch('http://localhost:5256/api/susa', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
