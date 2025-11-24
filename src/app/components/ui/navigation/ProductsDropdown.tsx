@@ -54,7 +54,7 @@ export default function ProductsDropdown() {
                 <h3 className="text-xl font-bold text-white">Analytik</h3>
                 <Link href="/products" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">Digital Twin Platform</Link>
                 <Link href="/products" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">ParaView Viewer</Link>
-                <Link href="products/kpi" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">KPI Calculation</Link>
+                <Link href="products/susa" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">KPI Calculation</Link>
               </div>
 
               <div className={getPanelClass('integration-content')}>

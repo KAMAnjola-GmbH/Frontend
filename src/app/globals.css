@@ -3,6 +3,9 @@
 body {
   font-family: 'Inter', sans-serif;
 }
+html, body {
+  height: 100%;
+}
 
 .dropdown-menu {
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;

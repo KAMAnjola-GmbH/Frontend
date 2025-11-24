@@ -1,16 +1,37 @@
 // app/page.tsx
 'use client';
 
+import React from 'react';
+import Footer from '@/app/components/ui/Footer';
+
 export default function HomePage() {
   return (
-    <>
-      {/* Hero Section */}
-             <video autoPlay loop muted playsInline id="bg-video">
-                  <source src="/R0sitavideobg.mp4" type="video/mp4" />
-                </video>
-      <section className="relative h-[80vh] flex items-center justify-center text-center overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/50 to-transparent z-10"></div>
-        <div className="relative z-20 px-4">
+    // WRAPPER:
+    // 1. flex flex-col: Strictly forces vertical stacking
+    // 2. h-full overflow-y-auto: Enables scrolling within this container
+    <div className="flex flex-col h-full w-full overflow-y-auto bg-slate-900">
+      
+      {/* --- HERO SECTION --- */}
+      <section className="relative min-h-[80vh] flex items-center justify-center text-center overflow-hidden shrink-0">
+        
+        {/* VIDEO LAYER (Background) */}
+        <div className="absolute inset-0 z-0">
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            id="bg-video" 
+            className="w-full h-full object-cover"
+          >
+            <source src="/R0sitavideobg.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay for text readability */}
+        </div>
+
+        {/* TEXT LAYER (Foreground) */}
+        {/* z-10 ensures this sits on top of the video */}
+        <div className="relative z-10 px-4">
           <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight drop-shadow-2xl" data-i18n-key="herotext">
             Visualize, Simulate, and Optimize <br />
           </h1>
@@ -20,18 +41,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Other sections */}
-      <section className="py-20 bg-slate-800">
+      {/* --- NEXT SECTIONS --- */}
+      {/* shrink-0: Prevents compression */}
+      {/* relative z-10: Forces this section to sit ON TOP of any background layers */}
+      <section className="relative z-10 shrink-0 py-20 bg-slate-800">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-white">More Sections Coming Soon</h2>
           <p className="text-gray-400 mt-4">Features, solutions, and documentation will be detailed here.</p>
         </div>
       </section>
-      <section className="py-20 bg-slate-900">
+
+      <section className="relative z-10 shrink-0 py-20 bg-slate-900">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-white">...</h2>
         </div>
       </section>
-    </>
+
+      {/* --- FOOTER --- */}
+      {/* Wrapped in a shrink-0 div to ensure it doesn't get crushed at the bottom */}
+      <div className="shrink-0 relative z-10">
+        <Footer />
+      </div>
+      
+    </div>
   );
 }
