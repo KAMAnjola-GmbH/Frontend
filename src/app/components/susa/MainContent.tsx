@@ -30,8 +30,8 @@ const MainContent: React.FC<MainContentProps> = ({
     // Initialize viewer (mock)
     useEffect(() => {
         if (viewerRef.current) {
-            const cleanup = viewerControls.initViewer(viewerRef.current);
-            return cleanup;
+            //const cleanup = viewerControls.initViewer(viewerRef.current);
+           // return cleanup;
         }
     }, []);
 

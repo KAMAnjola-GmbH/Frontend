@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { PreAnalysisResult, UnmappedAccount } from '@/src/types/susa';
+import { PreAnalysisResult, UnmappedAccount } from '@/types/susa';
 
 interface MappingUIProps {
     uploadId: number;
