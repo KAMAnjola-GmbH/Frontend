@@ -6,9 +6,6 @@ import Footer from '@/app/components/ui/Footer';
 
 export default function HomePage() {
   return (
-    // WRAPPER:
-    // 1. flex flex-col: Strictly forces vertical stacking
-    // 2. h-full overflow-y-auto: Enables scrolling within this container
     <div className="flex flex-col h-full w-full overflow-y-auto bg-slate-900">
       
       {/* --- HERO SECTION --- */}

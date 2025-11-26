@@ -14,7 +14,6 @@ export default function SusaLayout({ children }: { children: React.ReactNode }) 
           <SusaSidebar />
         </div>
 
-        {/* The Page Content (susa/page.tsx) renders here */}
         <main className="flex-1 relative flex flex-col min-w-0 overflow-hidden">
            {children}
         </main>

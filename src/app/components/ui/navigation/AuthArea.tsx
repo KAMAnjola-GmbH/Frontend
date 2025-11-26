@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function AuthArea({ user, isLoading }: { user: any, isLoading: boolean }) {
   if (isLoading) return <div className="font-semibold">Loading...</div>;
@@ -9,7 +10,14 @@ export default function AuthArea({ user, isLoading }: { user: any, isLoading: bo
     return (
       <div className="flex items-center gap-3">
         <span className="font-semibold">{user.name}</span>
-        <div className="w-7 h-7 rounded-full bg-gray-600">{/* icon */}</div>
+        <div style={{borderRadius: '30px', overflow: 'hidden'}}>
+
+        <Image src={user.picture}
+        alt='profile picture'
+        width={30}
+        height={30}/>
+        </div>
+
         <Link
           href="/auth/logout"
           className="bg-gray-700 hover:bg-red-600 text-white font-semibold p-1.5 rounded-full transition"

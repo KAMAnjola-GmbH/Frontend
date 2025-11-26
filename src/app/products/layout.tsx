@@ -6,7 +6,6 @@ import React from 'react';
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="h-full w-full flex flex-col overflow-hidden">
-      {/* We don't put the Sidebar here because different products need different sidebars */}
       {children}
     </div>
   );

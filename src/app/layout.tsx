@@ -16,13 +16,8 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
       <body className={`h-full antialiased bg-gray-900 text-gray-200 flex flex-col`}>
         <Auth0Provider>
           
-          {/* Navbar stays at the top */}
           <Navbar />
 
-          {/* This container is the "App Shell". 
-             It forces children to fill the space.
-             The 'overflow-y-auto' inside HomePage handles the scrolling now.
-          */}
           <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
             {children}
           </div>
