@@ -36,14 +36,19 @@ export interface PreAnalysisResult {
 export interface KpiRow {
     Gruppe: string;
     Erlöse: number;
-    'Personalkosten': number;
-    'Overhead-Kosten': number;
+    Personalkosten: number;
+    "Overhead-Kosten": number;
     EBIT: number;
-    'Personalkosten in %': number;
-    'Overhead-Kosten in %': number;
-    // Add other dynamic fields or data structure placeholders
-    [key: string]: any; 
+    "Personalkosten in %": number;
+    "Overhead-Kosten in %": number;
+
+    AdditionalData?: Record<string, unknown>;
+
+    // allow dynamic undervalues
+    [key: string]: string | number | null | undefined | Record<string, unknown>;
 }
+
+
 
 export interface ResultFiles {
     taskId: string;

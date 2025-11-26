@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function AuthArea({ user, isLoading }: { user: any, isLoading: boolean }) {
   if (isLoading) return <div className="font-semibold">Loading...</div>;
 

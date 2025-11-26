@@ -22,7 +22,8 @@ const GenericSidebar: React.FC<GenericSidebarProps> = ({
   children
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const [fileInputKey, setFileInputKey] = useState(() => Date.now());
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -36,7 +37,7 @@ const GenericSidebar: React.FC<GenericSidebarProps> = ({
     if (selectedFile && onUpload) {
       // We await the parent's action
       const success = await onUpload(selectedFile);
-      
+
       // Only clear if the parent returns true or undefined (void)
       if (success !== false) {
         setSelectedFile(null);
@@ -49,9 +50,9 @@ const GenericSidebar: React.FC<GenericSidebarProps> = ({
     <aside className="w-full h-full flex flex-col min-h-0 bg-[#001e5f]">
       <div className="p-4 flex-shrink-0">
         <div className="text-center font-semibold text-lg text-white/90">{title}</div>
-        
-        <Link 
-          href={homeLink} 
+
+        <Link
+          href={homeLink}
           className="block px-4 py-2.5 mt-2 text-center rounded-md hover:bg-blue-500/50 text-white transition font-semibold"
         >
           Home

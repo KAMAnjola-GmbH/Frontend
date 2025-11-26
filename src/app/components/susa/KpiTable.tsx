@@ -6,7 +6,7 @@ interface KpiTableProps {
     kpiData: KpiRow[];
 }
 
-const formatValue = (value: any, header: string) => {
+const formatValue = (value: number |string | number | Record<string, unknown> | null | undefined, header: string) => {
     if (typeof value === 'number') {
         if (header.includes('%')) {
             return `${value.toFixed(2)}%`;

@@ -50,9 +50,10 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ s3Key, taskId, label, i
             URL.revokeObjectURL(tempLink.href);
             addNotification(`Download of ${fileName} complete!`, 'success');
 
-        } catch (err: any) {
-            console.error(err);
-            addNotification(err.message || 'Download failed. Please try again.', 'error');
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Unknown error Dwonloading projects';
+            console.error(message);
+            addNotification(message, 'error');
         } finally {
             setIsDownloading(false);
         }
@@ -86,26 +87,26 @@ const DownloadLinks: React.FC<DownloadLinksProps> = ({ resultFiles }) => {
 
     return (
         <>
-            <DownloadButton 
-                s3Key={pdfS3Key} 
+            <DownloadButton
+                s3Key={pdfS3Key}
                 taskId={taskId}
-                label="Export PDF" 
-                iconSvg={pdfIcon} 
-                styleClasses="bg-red-600 hover:bg-red-500 text-white" 
+                label="Export PDF"
+                iconSvg={pdfIcon}
+                styleClasses="bg-red-600 hover:bg-red-500 text-white"
             />
-            <DownloadButton 
-                s3Key={excelS3Key} 
+            <DownloadButton
+                s3Key={excelS3Key}
                 taskId={taskId}
-                label="Export Excel" 
-                iconSvg={sheetIcon} 
-                styleClasses="bg-green-600 hover:bg-green-500 text-white" 
+                label="Export Excel"
+                iconSvg={sheetIcon}
+                styleClasses="bg-green-600 hover:bg-green-500 text-white"
             />
-            <DownloadButton 
-                s3Key={csvS3Key} 
+            <DownloadButton
+                s3Key={csvS3Key}
                 taskId={taskId}
-                label="Export CSV" 
-                iconSvg={sheetIcon} 
-                styleClasses="bg-blue-600 hover:bg-blue-500 text-white" 
+                label="Export CSV"
+                iconSvg={sheetIcon}
+                styleClasses="bg-blue-600 hover:bg-blue-500 text-white"
             />
         </>
     );

@@ -24,7 +24,7 @@ export function SignalRProvider({ token, children }: { token: string | undefined
 
   // Central storage for job update callbacks
   const jobUpdateCallbacks = React.useRef<((data: JobUpdateData) => void)[]>([]);
-  
+
   // Register/Deregister logic for components to use
   const registerJobUpdateListener = useCallback((callback: (data: JobUpdateData) => void) => {
     jobUpdateCallbacks.current.push(callback);
@@ -37,43 +37,47 @@ export function SignalRProvider({ token, children }: { token: string | undefined
   useEffect(() => {
     if (!token || !API_BASE_URL) return;
 
-    setConnectionStatus('Connecting');
-    const hubUrl = `${API_BASE_URL}/jobHub`; 
+    Promise.resolve().then(() => setConnectionStatus('Connecting'));
+    const hubUrl = `${API_BASE_URL}/jobHub`;
 
     const newConnection = new signalR.HubConnectionBuilder()
-      .withUrl(hubUrl, { accessTokenFactory: () => token! })
+      .withUrl(hubUrl, { accessTokenFactory: () => token })
       .withAutomaticReconnect()
       .build();
-    
-    // Add event handlers
+
+    // Event handlers for connection lifecycle
     newConnection.onclose(() => setConnectionStatus('Disconnected'));
     newConnection.onreconnecting(() => setConnectionStatus('Connecting'));
     newConnection.onreconnected(() => setConnectionStatus('Connected'));
 
-    newConnection.start()
-      .then(() => {
-        setConnectionStatus('Connected');
-        setConnection(newConnection);
-      })
-      .catch(err => {
-        console.error('SignalR Connection Error: ', err);
-        setConnectionStatus('Error');
-      });
-
     // Central JobUpdate listener
     newConnection.on("JobUpdate", (data: JobUpdateData) => {
-        // 1. Update global state for general consumption
-        setLastJobUpdate(data);
-        
-        // 2. Notify specific components listening via the ref
-        jobUpdateCallbacks.current.forEach(callback => callback(data));
+      setLastJobUpdate(data);
+      jobUpdateCallbacks.current.forEach(cb => cb(data));
     });
 
+    // Start connection asynchronously
+    const startConnection = async () => {
+      try {
+        await newConnection.start();
+        // Defer setState to next microtask to avoid cascading renders
+        Promise.resolve().then(() => {
+          setConnection(newConnection);
+          setConnectionStatus('Connected');
+        });
+      } catch (err) {
+        console.error('SignalR Connection Error: ', err);
+        setConnectionStatus('Error');
+      }
+    };
+
+    startConnection();
+
     return () => {
-      // Cleanup previous connection if token changes or component unmounts
       newConnection.stop().then(() => console.log('SignalR disconnected.'));
     };
   }, [token]);
+
 
 
   const value = {

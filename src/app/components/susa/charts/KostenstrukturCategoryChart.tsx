@@ -2,8 +2,9 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Chart, { ChartConfiguration } from 'chart.js/auto'; 
+import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { KpiRow } from '@/types/susa';
+import { Vault } from 'lucide-react';
 
 interface KostenstrukturCategoryChartProps {
     kpiData: KpiRow[];
@@ -22,18 +23,23 @@ const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = 
         if (chartInstance.current) {
             chartInstance.current.destroy();
         }
-
+        type Obj = Record<string, unknown>;
         // --- Logic from original createKostenstrukturChartWithCategory ---
-        const combinedData = { ...gesamtData, ...(gesamtData.AdditionalData || {}) };
-        
+        const combinedData = {
+            ...(gesamtData as Obj),
+            ...((gesamtData.AdditionalData ?? {}) as Obj),
+        };
         const overheadCategories = [
             'Abschreibungen & Anlagen', 'Fremdleistungen', 'Verwaltung & Büro',
             'IT & Kommunikation', 'Reisen & Repräsentation',
             'Versicherungen & Gebühren', 'Sonstige betriebliche Aufwendungen'
         ];
-
+        const chartData: number[] = [];
+        
         const chartLabels = ['Personalkosten'];
-        const chartData = [Math.abs(combinedData.Personalkosten)];
+        const pk = combinedData.Personalkosten;
+        const pkValue = typeof pk === "number" ? pk : 0;
+        chartData.push(Math.abs(pkValue));
 
         const chartColors = [
             '#EF4444', '#F97316', '#EAB308', '#22C55E',
@@ -42,22 +48,26 @@ const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = 
 
         overheadCategories.forEach(category => {
             let value = combinedData[category];
-            
-            if (typeof value === 'object' && value.parsedValue !== undefined) {
-                value = value.parsedValue;
-            }
-            
+            if (value != null)
+                if (typeof value === "object" && value !== null && "parsedValue" in value) {
+                    value = value.parsedValue;
+                }
+
             if (typeof value === 'number' && value !== 0) {
                 chartLabels.push(category);
                 chartData.push(Math.abs(value));
             }
         });
 
-        if (combinedData.EBIT > 0) {
-            chartLabels.push('EBIT');
-            chartData.push(combinedData.EBIT);
-            chartColors.push('#10B981');
+        const ebitRaw = combinedData.EBIT;
+        const ebit = typeof ebitRaw === "number" ? ebitRaw : 0;
+
+        if (ebit > 0) {
+            chartLabels.push("EBIT");
+            chartData.push(ebit);
+            chartColors.push("#10B981");
         }
+
 
         const data: ChartConfiguration<'doughnut'>['data'] = {
             labels: chartLabels,

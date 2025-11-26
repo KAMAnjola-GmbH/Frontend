@@ -27,6 +27,7 @@ const SusaProductPage: React.FC = () => {
                 currentAnalysis={currentAnalysis}
                 mappingData={mappingData}
                 isFetchingResults={isFetchingResults}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 saveMappingsAndRunAnalysis={saveMappingsAndRunAnalysis as any}
             />
         </div>

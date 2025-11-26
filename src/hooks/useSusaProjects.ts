@@ -1,303 +1,348 @@
 // src/hooks/useSusaProjects.ts
+'use client';
+
 import { useState, useEffect, useCallback } from 'react';
 import { useNotifications } from './useNotifications';
 import { useSignalR } from './useSignalR';
 import { config } from '../app/config';
-import { SusaProject, AnalysisResult, PreAnalysisResult, JobUpdateData, ProjectStatus } from '../types/susa';
+import {
+  SusaProject,
+  AnalysisResult,
+  PreAnalysisResult,
+  JobUpdateData,
+  ProjectStatus
+} from '../types/susa';
 
-// Assuming SUSA API base is defined in config
 const SUSA_API_URL = `${config.apiProxyBaseUrl}/susa`;
 
-export const useSusaProjects = () => {
-    const [projects, setProjects] = useState<SusaProject[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [currentProjectId, setCurrentProjectId] = useState<number | null>(null);
-    const [currentProjectStatus, setCurrentProjectStatus] = useState<ProjectStatus | null>(null);
-    const [currentAnalysis, setCurrentAnalysis] = useState<AnalysisResult | null>(null);
-    const [mappingData, setMappingData] = useState<PreAnalysisResult | null>(null);
-    const [isFetchingResults, setIsFetchingResults] = useState(false);
-    
-    const { addNotification } = useNotifications();
+// Return type of the hook
+interface UseSusaProjectsReturn {
+  projects: SusaProject[];
+  isLoading: boolean;
+  currentProjectId: number | null;
+  currentProjectStatus: ProjectStatus | null;
+  currentAnalysis: AnalysisResult | null;
+  mappingData: PreAnalysisResult | null;
+  isFetchingResults: boolean;
+  selectProject: (id: number) => Promise<void>;
+  uploadFile: (file: File) => Promise<boolean>;
+  deleteProject: (id: number) => Promise<void>;
+  renameProject: (id: number, name: string) => Promise<boolean>;
+  saveMappingsAndRunAnalysis: (id: number, mappings: Record<string, string>) => Promise<boolean>;
+  fetchAnalysisResults: (id: number) => Promise<boolean>;
+}
 
-    // === API CALLS ===
+export const useSusaProjects = (): UseSusaProjectsReturn => {
+  const [projects, setProjects] = useState<SusaProject[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentProjectId, setCurrentProjectId] = useState<number | null>(null);
+  const [currentProjectStatus, setCurrentProjectStatus] = useState<ProjectStatus | null>(null);
+  const [currentAnalysis, setCurrentAnalysis] = useState<AnalysisResult | null>(null);
+  const [mappingData, setMappingData] = useState<PreAnalysisResult | null>(null);
+  const [isFetchingResults, setIsFetchingResults] = useState(false);
 
-    const fetchProjects = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const response = await fetch(SUSA_API_URL); 
-            
-            // === LOOP PREVENTION LOGIC ===
-            if (response.status === 401) {
-                // Check if the 401 came from the Proxy (Session Missing) or Backend (Token Invalid)
-                // The proxy injects 'X-Proxy-Auth: Missing' if the Next.js session is gone.
-                const isSessionMissing = response.headers.get('X-Proxy-Auth') === 'Missing';
+  const { addNotification } = useNotifications();
 
-                if (isSessionMissing) {
-                    // Session is truly missing: Redirect to Login
-                   // const returnTo = window.location.pathname + window.location.search;
-                  //  window.location.href = `/auth/login?returnTo=${encodeURIComponent(returnTo)}`;
-                    return;
-                } else {
-                    // Session exists, but Backend rejected the token (e.g. permissions/audience issue).
-                    // DO NOT REDIRECT. Show error to user to stop the loop.
-                    throw new Error('Backend rejected authorization. Please check your account permissions.');
-                }
-            }
+  // ============================
+  // API: Fetch Projects
+  // ============================
+  const fetchProjects = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(SUSA_API_URL);
 
-            if (!response.ok) throw new Error('Failed to fetch SUSA projects.');
-            const data: SusaProject[] = await response.json();
-            setProjects(data);
-        } catch (error: any) {
-            console.error('Error fetching SUSA projects:', error);
-            addNotification(error.message || 'Could not load SUSA project list.', 'error');
-        } finally {
-            setIsLoading(false);
+      // Handle 401 from proxy/backend separately
+      if (response.status === 401) {
+        const isSessionMissing = response.headers.get('X-Proxy-Auth') === 'Missing';
+        if (isSessionMissing) return;
+        throw new Error('Backend rejected authorization. Please check your permissions.');
+      }
+
+      if (!response.ok) throw new Error('Failed to fetch SUSA projects.');
+
+      const data = (await response.json()) as SusaProject[];
+      setProjects(data);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error fetching projects';
+      console.error(message);
+      addNotification(message, 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [addNotification]);
+
+  // ============================
+  // Upload File
+  // ============================
+  const uploadFile = useCallback(
+    async (file: File): Promise<boolean> => {
+      const formData = new FormData();
+      formData.append('file', file);
+      addNotification(`Uploading file "${file.name}"...`, 'info');
+
+      try {
+        const response = await fetch(`${SUSA_API_URL}/upload`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({ message: 'Upload failed' }));
+          throw new Error(errData.message || 'Upload failed');
         }
-    }, [addNotification]);
 
-    // Replaces upload()
-    const uploadFile = useCallback(async (file: File) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        addNotification(`Uploading file "${file.name}"...`, 'info');
+        const result = (await response.json()) as { id: number };
+        addNotification(`File "${file.name}" uploaded successfully!`, 'success');
+        await fetchProjects();
+        await selectProject(result.id);
+        return true;
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Upload failed';
+        console.error(message);
+        addNotification(message, 'error');
+        return false;
+      }
+    },
+    [addNotification, fetchProjects]
+  );
 
-        try {
-            const response = await fetch(`${SUSA_API_URL}/upload`, {
-                method: "POST",
-                body: formData
-            });
+  // ============================
+  // Fetch Analysis Results
+  // ============================
+  const fetchAnalysisResults = useCallback(
+    async (uploadId: number): Promise<boolean> => {
+      if (isFetchingResults) return false;
 
-            if (!response.ok) {
-                const err = await response.json().catch(() => ({ message: "Upload failed" }));
-                throw new Error(err.message || "Upload failed");
-            }
-            const result: { id: number } = await response.json();
+      setIsFetchingResults(true);
+      setMappingData(null);
+      addNotification('Loading analysis results...', 'info');
 
-            addNotification(`File "${file.name}" uploaded successfully!`, 'success');
-            await fetchProjects();
-            selectProject(result.id);
-            
-            return true;
-        } catch (err: any) {
-            console.error(err);
-            addNotification(err.message || "Upload failed", 'error');
-            return false;
+      try {
+        const response = await fetch(`${SUSA_API_URL}/${uploadId}/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mappings: {} })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({ detail: 'Failed to load results' }));
+          throw new Error(errData.detail || 'Failed to load analysis results.');
         }
-    }, [addNotification, fetchProjects]);
 
-    // Replaces fetchAndDisplayAnalysisResults()
-    const fetchAnalysisResults = useCallback(async (uploadId: number) => {
-        if (isFetchingResults) return;
-
-        addNotification('Loading analysis results...', 'info');
-        setIsFetchingResults(true);
-        setMappingData(null); // Clear mapping UI
-
-        try {
-            const response = await fetch(`${SUSA_API_URL}/${uploadId}/analyze`, {
-                method: 'POST', // POST to signal fetching cache
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mappings: {} }) // Empty mappings to fetch cached result
-            });
-
-            if (response.status !== 200) {
-                const err = await response.json().catch(() => ({ message: "Failed to load results" }));
-                throw new Error(err.detail || 'Failed to load analysis results.');
-            }
-
-            const result: AnalysisResult = await response.json();
-            setCurrentAnalysis(result);
-            addNotification('Cached analysis results loaded.', 'success');
-            return true;
-
-        } catch (err: any) {
-            console.error(err);
-            addNotification(err.message || 'Failed to load analysis results.', 'error');
-            setCurrentAnalysis(null);
-            return false;
-        } finally {
-            setIsFetchingResults(false);
-        }
-    }, [addNotification, isFetchingResults]);
-
-    // Replaces performPreAnalysis()
-    const performPreAnalysis = useCallback(async (uploadId: number) => {
-        addNotification("Initiating pre-analysis...", "info");
-        setMappingData(null); 
+        const result = (await response.json()) as AnalysisResult;
+        setCurrentAnalysis(result);
+        addNotification('Cached analysis results loaded.', 'success');
+        return true;
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Failed to load results';
+        console.error(message);
+        addNotification(message, 'error');
         setCurrentAnalysis(null);
+        return false;
+      } finally {
+        setIsFetchingResults(false);
+      }
+    },
+    [addNotification, isFetchingResults]
+  );
 
-        try {
-            const response = await fetch(`${SUSA_API_URL}/${uploadId}/pre-analyze`, {
-                method: 'POST',
-            });
-            
-            if (!response.ok) {
-                const errorJson = await response.json().catch(() => ({ message: "Pre-analysis failed." }));
-                throw new Error(errorJson.message || 'Pre-analysis failed.');
-            }
+  // ============================
+  // Perform Pre-Analysis
+  // ============================
+  const performPreAnalysis = useCallback(
+    async (uploadId: number): Promise<boolean> => {
+      setCurrentAnalysis(null);
+      setMappingData(null);
+      addNotification('Initiating pre-analysis...', 'info');
 
-            const preAnalysisResult: PreAnalysisResult = await response.json();
-            setMappingData(preAnalysisResult);
-            addNotification("Pre-analysis complete. Ready for mapping.", "success");
-            return true;
-        } catch (error: any) {
-            console.error("Error during pre-analysis:", error);
-            addNotification(`Error: ${error.message}`, "error");
-            fetchProjects();
-            return false;
+      try {
+        const response = await fetch(`${SUSA_API_URL}/${uploadId}/pre-analyze`, { method: 'POST' });
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({ message: 'Pre-analysis failed' }));
+          throw new Error(errData.message);
         }
-    }, [addNotification, fetchProjects]);
-    
-    // Replaces saveMappingsAndRunAnalysis()
-    const saveMappingsAndRunAnalysis = useCallback(async (uploadId: number, mappings: { [account: string]: string }) => {
-        addNotification('Queuing analysis job...', 'info');
-        setMappingData(null); // Clear mapping UI
 
-        try {
-            const response = await fetch(`${SUSA_API_URL}/${uploadId}/analyze`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mappings }),
-            });
-
-            if (response.status !== 202) { // Expect 202 Accepted
-                const errorData = await response.json().catch(() => ({ message: "Failed to queue job" }));
-                throw new Error(errorData.detail || 'Failed to queue job.');
-            }
-
-            const queueResult: { jobId: number, status: ProjectStatus } = await response.json();
-            addNotification(`Job ${queueResult.jobId} successfully queued! Status: ${queueResult.status}.`, 'success');
-
-            fetchProjects(); // Refresh list to update status
-            return true;
-
-        } catch (err: any) {
-            console.error("Error queuing analysis:", err);
-            addNotification(err.message || 'Failed to queue analysis.', 'error');
-            fetchProjects(); 
-            return false;
-        }
-    }, [addNotification, fetchProjects]);
-
-
-    // Replaces deleteUpload()
-    const deleteProject = useCallback(async (uploadId: number) => {
-        try {
-            const response = await fetch(`${SUSA_API_URL}/${uploadId}`, {
-                method: 'DELETE',
-            });
-            if (response.status !== 204) {
-                const err = await response.json().catch(() => ({ message: "Delete failed" }));
-                throw new Error(err.message || 'Delete failed.');
-            }
-            addNotification('Project deleted successfully.', 'success');
-            await fetchProjects();
-            // Clear current view if the deleted project was active
-            if (currentProjectId === uploadId) {
-                setCurrentProjectId(null);
-                setCurrentAnalysis(null);
-                setMappingData(null);
-            }
-        } catch (err: any) {
-            console.error(err);
-            addNotification(err.message || 'Failed to delete project.', 'error');
-        }
-    }, [addNotification, fetchProjects, currentProjectId]);
-
-    // Replaces renameUpload()
-    const renameProject = useCallback(async (uploadId: number, newName: string) => {
-        try {
-            const response = await fetch(`${SUSA_API_URL}/${uploadId}/rename`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ newName }),
-            });
-            if (!response.ok) {
-                const err = await response.json().catch(() => ({ message: "Rename failed" }));
-                throw new Error(err.message || 'Rename failed.');
-            }
-            addNotification('Project renamed successfully.', 'success');
-            await fetchProjects();
-            return true;
-        } catch (err: any) {
-            console.error(err);
-            addNotification(err.message || 'Failed to rename project.', 'error');
-            return false;
-        }
-    }, [addNotification, fetchProjects]);
-
-
-    // Replaces selectProject()
-    const selectProject = useCallback(async (projectId: number) => {
-        setCurrentProjectId(projectId);
-        setMappingData(null);
-        setCurrentAnalysis(null);
-        
-        // Find the project locally to determine status
-        const project = projects.find(p => p.id === projectId);
-        if (!project) {
-            // If project not found locally, fetch it first
-            await fetchProjects();
-            return;
-        }
-        
-        setCurrentProjectStatus(project.status);
-
-        if (project.status === 'Ready for Mapping' || project.status === 'Mapping in Progress') {
-            await performPreAnalysis(projectId);
-        } else if (project.status === 'Analysis Complete') {
-            await fetchAnalysisResults(projectId);
-        } else {
-            addNotification(`Project ${projectId} is currently in status: ${project.status}. Please wait.`, 'info');
-        }
-    }, [projects, fetchProjects, performPreAnalysis, fetchAnalysisResults, addNotification]);
-
-
-    // === SIGNALR HANDLING ===
-    const handleJobUpdate = useCallback((data: JobUpdateData) => {
-        console.log("SIGNALR RECEIVED JobUpdate:", data);
-        
-        // 1. Refresh the project list immediately to update status badges
+        const result = (await response.json()) as PreAnalysisResult;
+        setMappingData(result);
+        addNotification('Pre-analysis complete. Ready for mapping.', 'success');
+        return true;
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Pre-analysis failed';
+        console.error(message);
+        addNotification(`Error: ${message}`, 'error');
         fetchProjects();
+        return false;
+      }
+    },
+    [addNotification, fetchProjects]
+  );
 
-        // 2. If the updated job is the one currently displayed, update UI
-        if (data.jobId === currentProjectId) {
-            setCurrentProjectStatus(data.status);
+  // ============================
+  // Save Mappings and Run Analysis
+  // ============================
+  const saveMappingsAndRunAnalysis = useCallback(
+    async (uploadId: number, mappings: Record<string, string>): Promise<boolean> => {
+      setMappingData(null);
+      addNotification('Queuing analysis job...', 'info');
 
-            if (data.status === 'Analysis Complete') {
-                addNotification(`Analysis for project ${data.jobId} completed! Loading results...`, 'success');
-                // Automatically fetch and display final results
-                fetchAnalysisResults(data.jobId); 
-            } else if (data.status.startsWith('Failed')) {
-                addNotification(`Analysis for project ${data.jobId} failed.`, 'error');
-            } else if (data.status === 'Processing') {
-                addNotification(`Project ${data.jobId} analysis is now running.`, 'info');
-            }
+      try {
+        const response = await fetch(`${SUSA_API_URL}/${uploadId}/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mappings })
+        });
+
+        if (response.status !== 202) {
+          const errData = await response.json().catch(() => ({ detail: 'Failed to queue job' }));
+          throw new Error(errData.detail || 'Failed to queue job');
         }
-    }, [fetchProjects, currentProjectId, fetchAnalysisResults, addNotification]);
 
-    // Integrate SignalR
-    useSignalR(handleJobUpdate);
-
-    // Initial fetch
-    useEffect(() => {
+        const result = (await response.json()) as { jobId: number; status: ProjectStatus };
+        addNotification(`Job ${result.jobId} queued! Status: ${result.status}.`, 'success');
         fetchProjects();
-    }, [fetchProjects]);
+        return true;
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Failed to queue job';
+        console.error(message);
+        addNotification(message, 'error');
+        fetchProjects();
+        return false;
+      }
+    },
+    [addNotification, fetchProjects]
+  );
 
+  // ============================
+  // Delete Project
+  // ============================
+  const deleteProject = useCallback(
+    async (uploadId: number): Promise<void> => {
+      try {
+        const response = await fetch(`${SUSA_API_URL}/${uploadId}`, { method: 'DELETE' });
+        if (response.status !== 204) {
+          const errData = await response.json().catch(() => ({ message: 'Delete failed' }));
+          throw new Error(errData.message || 'Delete failed');
+        }
+        addNotification('Project deleted successfully.', 'success');
+        await fetchProjects();
 
-    return {
-        projects,
-        isLoading,
-        currentProjectId,
-        currentProjectStatus,
-        currentAnalysis,
-        mappingData,
-        isFetchingResults,
-        selectProject,
-        uploadFile,
-        deleteProject,
-        renameProject,
-        saveMappingsAndRunAnalysis,
-        fetchAnalysisResults, // Expose for context menu analysis button
-    };
+        if (currentProjectId === uploadId) {
+          setCurrentProjectId(null);
+          setCurrentAnalysis(null);
+          setMappingData(null);
+        }
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Failed to delete project';
+        console.error(message);
+        addNotification(message, 'error');
+      }
+    },
+    [addNotification, fetchProjects, currentProjectId]
+  );
+
+  // ============================
+  // Rename Project
+  // ============================
+  const renameProject = useCallback(
+    async (uploadId: number, newName: string): Promise<boolean> => {
+      try {
+        const response = await fetch(`${SUSA_API_URL}/${uploadId}/rename`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ newName })
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({ message: 'Rename failed' }));
+          throw new Error(errData.message || 'Rename failed');
+        }
+
+        addNotification('Project renamed successfully.', 'success');
+        await fetchProjects();
+        return true;
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Failed to rename project';
+        console.error(message);
+        addNotification(message, 'error');
+        return false;
+      }
+    },
+    [addNotification, fetchProjects]
+  );
+
+  // ============================
+  // Select Project
+  // ============================
+  const selectProject = useCallback(
+    async (projectId: number): Promise<void> => {
+      setCurrentProjectId(projectId);
+      setCurrentAnalysis(null);
+      setMappingData(null);
+
+      const project = projects.find((p) => p.id === projectId);
+      if (!project) {
+        await fetchProjects();
+        return;
+      }
+
+      setCurrentProjectStatus(project.status);
+
+      if (project.status === 'Ready for Mapping' || project.status === 'Mapping in Progress') {
+        await performPreAnalysis(projectId);
+      } else if (project.status === 'Analysis Complete') {
+        await fetchAnalysisResults(projectId);
+      } else {
+        addNotification(`Project ${projectId} is currently ${project.status}. Please wait.`, 'info');
+      }
+    },
+    [projects, fetchProjects, performPreAnalysis, fetchAnalysisResults, addNotification]
+  );
+
+  // ============================
+  // Handle SignalR Updates
+  // ============================
+  const handleJobUpdate = useCallback(
+    (data: JobUpdateData) => {
+      fetchProjects();
+
+      if (data.jobId === currentProjectId) {
+        setCurrentProjectStatus(data.status);
+
+        if (data.status === 'Analysis Complete') {
+          addNotification(`Analysis for project ${data.jobId} completed! Loading results...`, 'success');
+          fetchAnalysisResults(data.jobId);
+        } else if (typeof data.status === 'string' && data.status.startsWith('Failed')) {
+          addNotification(`Analysis for project ${data.jobId} failed.`, 'error');
+        } else if (data.status === 'Processing') {
+          addNotification(`Project ${data.jobId} analysis is now running.`, 'info');
+        }
+      }
+    },
+    [fetchProjects, currentProjectId, fetchAnalysisResults, addNotification]
+  );
+
+  useSignalR(handleJobUpdate);
+
+  // ============================
+  // Initial Fetch
+  // ============================
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  return {
+    projects,
+    isLoading,
+    currentProjectId,
+    currentProjectStatus,
+    currentAnalysis,
+    mappingData,
+    isFetchingResults,
+    selectProject,
+    uploadFile,
+    deleteProject,
+    renameProject,
+    saveMappingsAndRunAnalysis,
+    fetchAnalysisResults
+  };
 };
