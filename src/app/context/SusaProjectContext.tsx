@@ -9,7 +9,6 @@ type SusaProjectContextType = ReturnType<typeof useSusaProjects>;
 const SusaProjectContext = createContext<SusaProjectContextType | null>(null);
 
 export const SusaProjectProvider = ({ children }: { children: React.ReactNode }) => {
-    // This is the SINGLE instance of the hook that will be shared
     const susaLogic = useSusaProjects();
 
     return (

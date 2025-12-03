@@ -44,6 +44,7 @@ async function proxyHandler(request: NextRequest, { params }: ProxyParams) {
 
     // 5. Send request
     try {
+        console.log(accessToken)
       const backendRes = await fetch(targetUrl.toString(), {
         method,
         headers,
