@@ -1,7 +1,7 @@
 // src/hooks/useSusaProjects.ts
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback,useRef } from 'react';
 import { useNotifications } from './useNotifications';
 import { useSignalR } from './useSignalR';
 import { config } from '../app/config';
@@ -43,6 +43,17 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
 
   const { addNotification } = useNotifications();
 
+  const currentProjectIdRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    currentProjectIdRef.current = currentProjectId;
+  }, [currentProjectId]);
+  
+  const processedSignalsRef = useRef<Record<number, string>>({});
+
+  useEffect(() => {
+    currentProjectIdRef.current = currentProjectId;
+  }, [currentProjectId]);
   // ============================
   // API: Fetch Projects
   // ============================
@@ -289,7 +300,7 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
 
       if (project.status === 'Ready for Mapping' || project.status === 'Mapping in Progress') {
         await performPreAnalysis(projectId);
-      } else if (project.status === 'Analysis Complete') {
+      } else if (project.status === 'Completed') {
         await fetchAnalysisResults(projectId);
       } else {
         addNotification(`Project ${projectId} is currently ${project.status}. Please wait.`, 'info');
@@ -298,27 +309,54 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
     [projects, fetchProjects, performPreAnalysis, fetchAnalysisResults, addNotification]
   );
 
-  // ============================
-  // Handle SignalR Updates
+// ============================
+  // Handle SignalR Updates (With Idempotency Fix)
   // ============================
   const handleJobUpdate = useCallback(
     (data: JobUpdateData) => {
+      
+      // NORMALIZE STATUS
+      let incomingStatus = data.status;
+      if (incomingStatus === 'Completed') {
+        incomingStatus = 'Completed';
+      }
+
+      // === THE FIX: DUPLICATE CHECK ===
+      // Check if we have already processed this specific status for this job.
+      const lastStatus = processedSignalsRef.current[data.jobId];
+
+      if (lastStatus === incomingStatus) {
+        console.log(`SignalR Duplicate Ignored: ID ${data.jobId} is already "${incomingStatus}"`);
+        return; // STOP EXECUTION HERE
+      }
+
+      // Mark this status as processed
+      processedSignalsRef.current[data.jobId] = incomingStatus;
+      // ================================
+
+      // Refresh list (Only do this once per valid status change)
       fetchProjects();
 
-      if (data.jobId === currentProjectId) {
-        setCurrentProjectStatus(data.status);
+      const activeId = currentProjectIdRef.current;
 
-        if (data.status === 'Analysis Complete') {
+      if (data.jobId === activeId) {
+        setCurrentProjectStatus(incomingStatus);
+
+        console.log(`SignalR Update: ID ${data.jobId}, Status: "${incomingStatus}"`);
+
+        if (incomingStatus === 'Completed') {
           addNotification(`Analysis for project ${data.jobId} completed! Loading results...`, 'success');
           fetchAnalysisResults(data.jobId);
-        } else if (typeof data.status === 'string' && data.status.startsWith('Failed')) {
+        } 
+        else if (typeof incomingStatus === 'string' && incomingStatus.startsWith('Failed')) {
           addNotification(`Analysis for project ${data.jobId} failed.`, 'error');
-        } else if (data.status === 'Processing') {
+        } 
+        else if (incomingStatus === 'Processing') {
           addNotification(`Project ${data.jobId} analysis is now running.`, 'info');
         }
       }
     },
-    [fetchProjects, currentProjectId, fetchAnalysisResults, addNotification]
+    [fetchProjects, fetchAnalysisResults, addNotification]
   );
 
   useSignalR(handleJobUpdate);

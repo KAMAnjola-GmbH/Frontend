@@ -35,7 +35,7 @@ export default function ProductsDropdown() {
                   { id: 'te-te-content', name: 'Technologies of Technologies (ToT)' },
                 ].map(({ id, name }) => (
                   <li key={id} onMouseEnter={() => setActiveMenu(id)}>
-                    <Link href="products//" className="flex justify-between items-center w-full px-3 py-2.5 rounded-md text-sm font-semibold text-gray-300 hover:bg-pink-600/50 hover:text-white transition">
+                    <Link href="/products" className="flex justify-between items-center w-full px-3 py-2.5 rounded-md text-sm font-semibold text-gray-300 hover:bg-pink-600/50 hover:text-white transition">
                       <span>{name}</span>
                     </Link>
                   </li>
@@ -87,7 +87,7 @@ export default function ProductsDropdown() {
 
 function DropdownLink({ name }: { name: string }) {
   return (
-    <Link href="products/kpi_calculation" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">
+    <Link href="/" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">
       {name}
     </Link>
   );

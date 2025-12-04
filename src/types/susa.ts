@@ -3,7 +3,7 @@
 export type ProjectStatus = 
     | 'Ready for Mapping' 
     | 'Mapping in Progress' 
-    | 'Analysis Complete' 
+    | 'Completed' 
     | 'Failed' 
     | 'Queued'
     | 'Processing';

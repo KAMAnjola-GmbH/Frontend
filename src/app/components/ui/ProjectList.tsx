@@ -20,7 +20,7 @@ interface ProjectListProps {
 
 const getStatusColorClass = (status: ProjectStatus) => {
     switch (status) {
-        case 'Analysis Complete': return 'bg-green-500/20 text-green-400';
+        case 'Completed': return 'bg-green-500/20 text-green-400';
         case 'Ready for Mapping': return 'bg-yellow-500/20 text-yellow-400';
         case 'Mapping in Progress': return 'bg-blue-500/20 text-blue-400';
         case 'Processing': return 'bg-indigo-500/20 text-indigo-400 animate-pulse';
@@ -109,7 +109,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
 
     const getAnalyzeButtonText = (status: ProjectStatus) => {
         switch (status) {
-            case 'Analysis Complete': return 'View Report';
+            case 'Completed': return 'View Report';
             case 'Ready for Mapping': return 'Start Mapping/Analysis';
             case 'Mapping in Progress': return 'Continue Mapping';
             case 'Processing': return 'View Status';
