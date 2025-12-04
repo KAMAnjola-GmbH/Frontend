@@ -1,80 +1,88 @@
 // src/hooks/useSignalR.ts
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { JobUpdateData } from '../types/susa';
 import { useNotifications } from './useNotifications';
 
 interface SignalRState {
-    connection: signalR.HubConnection | null;
-    isConnected: boolean;
+  connection: signalR.HubConnection | null;
+  isConnected: boolean;
 }
 
-// FIX: Match the backend Program.cs path ("/simulationHub")
 const SIGNALR_BASE_URL = process.env.NEXT_PUBLIC_SIGNALR_URL;
-// If base URL is provided, use it, otherwise default to local backend port
 const HUB_URL = SIGNALR_BASE_URL
-    ? `${SIGNALR_BASE_URL}/simulationHub`
-    : 'http://localhost:5256/simulationHub';
+  ? `${SIGNALR_BASE_URL}/simulationHub`
+  : 'http://localhost:5256/simulationHub';
 
 export const useSignalR = (onJobUpdate: (data: JobUpdateData) => void) => {
-    const [state, setState] = useState<SignalRState>({
-        connection: null,
-        isConnected: false,
+  const [state, setState] = useState<SignalRState>({
+    connection: null,
+    isConnected: false,
+  });
+  
+  const { addNotification } = useNotifications();
+
+  // 1. Store the latest callback in a ref. 
+  // This allows us to access the latest logic without restarting the connection.
+  const callbackRef = useRef(onJobUpdate);
+
+  // 2. Update the ref whenever the parent passes a new function
+  useEffect(() => {
+    callbackRef.current = onJobUpdate;
+  }, [onJobUpdate]);
+
+  useEffect(() => {
+    // Prevent multiple connections
+    if (state.connection || state.isConnected) return;
+
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl(HUB_URL)
+      .withAutomaticReconnect()
+      .build();
+
+    // 3. The listener calls the Ref, not the specific function instance.
+    // This wrapper is STABLE. It never changes.
+    connection.on("JobUpdate", (data: JobUpdateData) => {
+      if (callbackRef.current) {
+        callbackRef.current(data);
+      }
     });
-    const { addNotification } = useNotifications();
 
-    const startConnection = useCallback(function initConnection() {
-    const connect = async () => {
-        if (state.connection && state.isConnected) return;
+    connection.onreconnecting(error => {
+      console.warn(`SignalR connection lost. Reconnecting... ${error}`);
+      addNotification('Connection lost. Reconnecting...', 'info');
+      setState(prev => ({ ...prev, isConnected: false }));
+    });
 
-        try {
-            const connection = new signalR.HubConnectionBuilder()
-                .withUrl(HUB_URL)
-                .withAutomaticReconnect()
-                .build();
+    connection.onreconnected(() => {
+      console.log(`SignalR reconnected.`);
+      addNotification('Connection re-established.', 'success');
+      setState(prev => ({ ...prev, isConnected: true }));
+    });
 
-            connection.on("JobUpdate", onJobUpdate);
-
-            connection.onreconnecting(error => {
-                console.warn(`SignalR connection lost. Attempting to reconnect... ${error}`);
-                addNotification('Connection lost. Reconnecting...', 'info');
-                setState(prev => ({ ...prev, isConnected: false }));
-            });
-
-            connection.onreconnected(() => {
-                console.log(`SignalR reconnected.`);
-                addNotification('Connection re-established.', 'success');
-                setState(prev => ({ ...prev, isConnected: true }));
-            });
-
-            await connection.start();
-            setState({ connection, isConnected: true });
-            console.log(`SignalR Connected to ${HUB_URL}`);
-
-        } catch (err: unknown) {
-            if (err instanceof Error && err.name !== 'AbortError') {
-                console.error("SignalR connection error:", err);
-                setTimeout(connect, 5000); // retry
-            }
-        }
+    const start = async () => {
+      try {
+        await connection.start();
+        console.log(`SignalR Connected to ${HUB_URL}`);
+        setState({ connection, isConnected: true });
+      } catch (err) {
+        console.error("SignalR connection error:", err);
+        // Basic retry logic could go here, 
+        // but automaticReconnect handles most temp failures after start
+      }
     };
 
-    connect();
-}, [onJobUpdate, addNotification, state.connection, state.isConnected]);
+    start();
 
+    // Cleanup
+    return () => {
+      connection.stop();
+    };
+    // 4. Dependency array is EMPTY (or essentially empty). 
+    // The connection is born once and dies only on unmount.
+  }, []); 
 
-    useEffect(() => {
-        startConnection();
-
-        // Cleanup on unmount
-        return () => {
-            if (state.connection) {
-                state.connection.stop();
-            }
-        };
-    }, [startConnection]);
-
-    return state;
+  return state;
 };
