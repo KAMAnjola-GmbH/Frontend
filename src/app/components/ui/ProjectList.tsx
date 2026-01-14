@@ -71,12 +71,16 @@ const ProjectList: React.FC<ProjectListProps> = ({
         if (action === 'analyze') {
             selectProject(menuState.projectId); // Use selectProject to handle the flow (mapping or fetching results)
             //viewerControls.clearScene(); // Clear scene if a new analysis starts
+            setMenuState(null); // Only close menu for analyze action
         } else if (action === 'delete') {
             setIsDeleteModalOpen(true);
+            // Keep menuState so modal has access to projectId/projectName
+            setMenuState(prev => prev ? { ...prev, isOpen: false } : null);
         } else if (action === 'rename') {
             setIsRenameModalOpen(true);
+            // Keep menuState so modal has access to projectId/projectName
+            setMenuState(prev => prev ? { ...prev, isOpen: false } : null);
         }
-        setMenuState(null);
     };
 
     // Close context menu on any click outside
@@ -97,6 +101,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
         if (menuState) {
             deleteProject(menuState.projectId);
             setIsDeleteModalOpen(false);
+            setMenuState(null);
         }
     };
 
@@ -104,7 +109,17 @@ const ProjectList: React.FC<ProjectListProps> = ({
         if (menuState) {
             await renameProject(menuState.projectId, newName);
             setIsRenameModalOpen(false);
+            setMenuState(null);
         }
+    };
+
+    const handleModalClose = (modalType: 'delete' | 'rename') => {
+        if (modalType === 'delete') {
+            setIsDeleteModalOpen(false);
+        } else {
+            setIsRenameModalOpen(false);
+        }
+        setMenuState(null);
     };
 
     const getAnalyzeButtonText = (status: ProjectStatus) => {
@@ -180,14 +195,14 @@ const ProjectList: React.FC<ProjectListProps> = ({
             {/* Modals */}
             {menuState && (
                 <>
-                    <DeleteModal 
-                        isOpen={isDeleteModalOpen} 
-                        onClose={() => setIsDeleteModalOpen(false)} 
+                    <DeleteModal
+                        isOpen={isDeleteModalOpen}
+                        onClose={() => handleModalClose('delete')}
                         onConfirm={handleDeleteConfirm}
                     />
-                    <RenameModal 
+                    <RenameModal
                         isOpen={isRenameModalOpen}
-                        onClose={() => setIsRenameModalOpen(false)}
+                        onClose={() => handleModalClose('rename')}
                         currentName={menuState.projectName}
                         onConfirm={handleRenameConfirm}
                     />

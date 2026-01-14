@@ -6,11 +6,17 @@ import { PreAnalysisResult } from '@/types/susa';
 interface MappingUIProps {
   uploadId: number;
   data: PreAnalysisResult;
-  onSave: (uploadId: number, mappings: Record<string, string>) => Promise<void>;
+  onSave: (uploadId: number, mappings: Record<string, string>) => Promise<boolean>;
 }
 
 const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
-  const { unmappedAccounts, availableCategories } = data;
+  const { unmappedAccounts: rawAccounts, availableCategories } = data;
+
+  // Normalize accounts - handle both uppercase (Konto/Bezeichnung) and lowercase (konto/bezeichnung)
+  const unmappedAccounts = rawAccounts.map((acc: Record<string, string>) => ({
+    konto: acc.konto || acc.Konto || '',
+    bezeichnung: acc.bezeichnung || acc.Bezeichnung || ''
+  }));
 
   const [mappings, setMappings] = useState<Record<string, string>>(
     unmappedAccounts.reduce((acc, account) => ({ ...acc, [account.konto]: '' }), {})

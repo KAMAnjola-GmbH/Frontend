@@ -11,7 +11,7 @@ interface MainContentProps {
   currentAnalysis: AnalysisResult | null;
   mappingData: PreAnalysisResult | null;
   isFetchingResults: boolean;
-  saveMappingsAndRunAnalysis: (id: number, mappings: Record<string, string>) => Promise<void>;
+  saveMappingsAndRunAnalysis: (id: number, mappings: Record<string, string>) => Promise<boolean>;
 }
 
 const MainContent: React.FC<MainContentProps> = ({
