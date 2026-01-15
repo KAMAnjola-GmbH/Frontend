@@ -43,6 +43,7 @@ export function useCookieConsent() {
       const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as ConsentState;
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCookieState({
             isLoaded: true,
             data: parsed
