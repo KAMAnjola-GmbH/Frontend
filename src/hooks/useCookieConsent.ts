@@ -1,16 +1,17 @@
+// src/hooks/useCookieConsent.ts
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 
 export type ConsentCategories = {
-  necessary: boolean;    // Always true - required for site to function
-  analytics: boolean;    // Google Analytics, Vercel Speed Insights, etc.
-  marketing: boolean;    // Ad tracking, remarketing pixels
+  necessary: boolean;
+  analytics: boolean;
+  marketing: boolean;
 };
 
 export type ConsentState = {
-  consented: boolean;           // Has user made a choice?
-  timestamp: string | null;     // When consent was given
+  consented: boolean;
+  timestamp: string | null;
   categories: ConsentCategories;
 };
 
@@ -26,35 +27,48 @@ const DEFAULT_CONSENT: ConsentState = {
   },
 };
 
-export function useCookieConsent() {
-  const [consent, setConsent] = useState<ConsentState>(DEFAULT_CONSENT);
-  const [isLoaded, setIsLoaded] = useState(false);
+interface CookieConsentState {
+    isLoaded: boolean;
+    data: ConsentState;
+}
 
-  // Load consent from localStorage on mount
+export function useCookieConsent() {
+  const [cookieState, setCookieState] = useState<CookieConsentState>({
+    isLoaded: false,
+    data: DEFAULT_CONSENT,
+  });
+
   useEffect(() => {
     try {
       const stored = localStorage.getItem(CONSENT_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as ConsentState;
-        setConsent(parsed);
+        setCookieState({
+            isLoaded: true,
+            data: parsed
+        });
+        return;
       }
     } catch (error) {
       console.error('Failed to load cookie consent:', error);
     }
-    setIsLoaded(true);
+    
+    // If no storage found or error, just set loaded to true with defaults
+    setCookieState(prev => ({ ...prev, isLoaded: true }));
   }, []);
 
-  // Save consent to localStorage
   const saveConsent = useCallback((newConsent: ConsentState) => {
     try {
       localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(newConsent));
-      setConsent(newConsent);
+      setCookieState({
+          isLoaded: true,
+          data: newConsent
+      });
     } catch (error) {
       console.error('Failed to save cookie consent:', error);
     }
   }, []);
 
-  // Accept all cookies
   const acceptAll = useCallback(() => {
     const newConsent: ConsentState = {
       consented: true,
@@ -68,7 +82,6 @@ export function useCookieConsent() {
     saveConsent(newConsent);
   }, [saveConsent]);
 
-  // Accept only necessary cookies
   const acceptNecessaryOnly = useCallback(() => {
     const newConsent: ConsentState = {
       consented: true,
@@ -82,13 +95,12 @@ export function useCookieConsent() {
     saveConsent(newConsent);
   }, [saveConsent]);
 
-  // Accept custom selection
   const acceptCustom = useCallback((categories: Partial<ConsentCategories>) => {
     const newConsent: ConsentState = {
       consented: true,
       timestamp: new Date().toISOString(),
       categories: {
-        necessary: true, // Always true
+        necessary: true,
         analytics: categories.analytics ?? false,
         marketing: categories.marketing ?? false,
       },
@@ -96,25 +108,26 @@ export function useCookieConsent() {
     saveConsent(newConsent);
   }, [saveConsent]);
 
-  // Reset consent (for settings page)
   const resetConsent = useCallback(() => {
     try {
       localStorage.removeItem(CONSENT_STORAGE_KEY);
-      setConsent(DEFAULT_CONSENT);
+      setCookieState({
+          isLoaded: true,
+          data: DEFAULT_CONSENT
+      });
     } catch (error) {
       console.error('Failed to reset cookie consent:', error);
     }
   }, []);
 
-  // Check if specific category is allowed
   const isAllowed = useCallback((category: keyof ConsentCategories): boolean => {
-    return consent.categories[category];
-  }, [consent.categories]);
+    return cookieState.data.categories[category];
+  }, [cookieState.data.categories]);
 
   return {
-    consent,
-    isLoaded,
-    showBanner: isLoaded && !consent.consented,
+    consent: cookieState.data,
+    isLoaded: cookieState.isLoaded,
+    showBanner: cookieState.isLoaded && !cookieState.data.consented,
     acceptAll,
     acceptNecessaryOnly,
     acceptCustom,
