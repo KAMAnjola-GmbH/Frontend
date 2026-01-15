@@ -22,65 +22,57 @@ const HUB_URL = SIGNALR_BASE_URL
  */
 async function fetchAccessToken(): Promise<string> {
   try {
-    console.log('[SignalR] Fetching access token...');
     const response = await fetch('/api/auth/token', {
       method: 'GET',
       credentials: 'include',
-      cache: 'no-store'  // Prevent caching
+      cache: 'no-store'
     });
-    console.log('[SignalR] Response status:', response.status, response.statusText);
-
-    const text = await response.text();
-    console.log('[SignalR] Response body:', text);
 
     if (!response.ok) {
-      console.warn('[SignalR] Token endpoint returned error:', response.status);
       return '';
     }
 
-    const data = JSON.parse(text);
-    const token = data.token || data.accessToken || '';
-    console.log('[SignalR] Got token:', token ? `${token.substring(0, 20)}...` : '(empty)');
-    return token;
-  } catch (error) {
-    console.error('[SignalR] Error fetching access token:', error);
+    const data = await response.json();
+    return data.token || data.accessToken || '';
+  } catch {
     return '';
   }
 }
 
 export const useSignalR = (onJobUpdate: (data: JobUpdateData) => void) => {
-  const [state, setState] = useState<SignalRState>({
-    connection: null,
-    isConnected: false,
-  });
-
+  const [isConnected, setIsConnected] = useState(false);
   const { addNotification } = useNotifications();
 
-  // 1. Store the latest callback in a ref.
-  // This allows us to access the latest logic without restarting the connection.
+  // Refs for stable references across renders
   const callbackRef = useRef(onJobUpdate);
+  const connectionRef = useRef<signalR.HubConnection | null>(null);
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 2. Update the ref whenever the parent passes a new function
+  // Update callback ref when it changes
   useEffect(() => {
     callbackRef.current = onJobUpdate;
   }, [onJobUpdate]);
 
   useEffect(() => {
     // Prevent multiple connections
-    if (state.connection || state.isConnected) return;
+    if (connectionRef.current) return;
 
     let isCancelled = false;
 
     const connect = async () => {
-      // First, check if we can get a token (user is authenticated)
+      // Clear any pending retry
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+      }
+
       const token = await fetchAccessToken();
 
       if (isCancelled) return;
 
       if (!token) {
-        console.warn('[SignalR] No token available, will retry in 2s...');
-        // Retry after a delay - user might still be logging in
-        setTimeout(() => {
+        // Retry after delay - store timeout ID for cleanup
+        retryTimeoutRef.current = setTimeout(() => {
           if (!isCancelled) {
             connect();
           }
@@ -95,29 +87,34 @@ export const useSignalR = (onJobUpdate: (data: JobUpdateData) => void) => {
         .withAutomaticReconnect()
         .build();
 
-      // The listener calls the Ref, not the specific function instance.
       connection.on("JobUpdate", (data: JobUpdateData) => {
-        if (callbackRef.current) {
-          callbackRef.current(data);
-        }
+        callbackRef.current?.(data);
       });
 
-      connection.onreconnecting(error => {
-        console.warn(`SignalR connection lost. Reconnecting... ${error}`);
+      connection.onreconnecting(() => {
         addNotification('Connection lost. Reconnecting...', 'info');
-        setState(prev => ({ ...prev, isConnected: false }));
+        setIsConnected(false);
       });
 
       connection.onreconnected(() => {
-        console.log(`SignalR reconnected.`);
         addNotification('Connection re-established.', 'success');
-        setState(prev => ({ ...prev, isConnected: true }));
+        setIsConnected(true);
+      });
+
+      connection.onclose(() => {
+        setIsConnected(false);
+        connectionRef.current = null;
       });
 
       try {
         await connection.start();
-        console.log(`[SignalR] Connected to ${HUB_URL} with auth`);
-        setState({ connection, isConnected: true });
+        if (!isCancelled) {
+          connectionRef.current = connection;
+          setIsConnected(true);
+        } else {
+          // Component unmounted during connection - cleanup
+          connection.stop();
+        }
       } catch (err) {
         console.error("[SignalR] Connection error:", err);
       }
@@ -125,14 +122,23 @@ export const useSignalR = (onJobUpdate: (data: JobUpdateData) => void) => {
 
     connect();
 
-    // Cleanup
+    // Cleanup function
     return () => {
       isCancelled = true;
-      if (state.connection) {
-        state.connection.stop();
+
+      // Clear pending retry timeout
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+      }
+
+      // Stop connection
+      if (connectionRef.current) {
+        connectionRef.current.stop();
+        connectionRef.current = null;
       }
     };
-  }, []); 
+  }, [addNotification]);
 
-  return state;
+  return { connection: connectionRef.current, isConnected };
 };

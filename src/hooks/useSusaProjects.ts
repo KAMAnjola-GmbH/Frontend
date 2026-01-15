@@ -63,9 +63,10 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
   // Hooks
   const { addNotification } = useNotifications();
 
-  // Refs for SignalR callback (stable reference)
+  // Refs for SignalR callback and race condition prevention
   const currentProjectIdRef = useRef<number | null>(null);
   const processedSignalsRef = useRef<Record<number, string>>({});
+  const requestIdRef = useRef(0); // Incremented for each async operation
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -121,15 +122,20 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
   // ============================
   const fetchAnalysisResults = useCallback(
     async (uploadId: number): Promise<boolean> => {
-      if (isFetchingResults) return false;
+      // Generate unique request ID for race condition prevention
+      const thisRequestId = ++requestIdRef.current;
 
       setIsFetchingResults(true);
       setMappingData(null);
       addNotification('Loading analysis results...', 'info');
 
       try {
-        // Call analyze with empty mappings to get cached results
         const result = await susaApi.analyze(uploadId, {});
+
+        // Check if this request is still the latest one
+        if (thisRequestId !== requestIdRef.current) {
+          return false; // A newer request superseded this one
+        }
 
         // Check if it's a completed analysis (has kpiResults)
         if ('kpiResults' in result) {
@@ -138,20 +144,25 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
           return true;
         }
 
-        // If it returned a queued response, something is wrong
         addNotification('Analysis not yet complete.', 'info');
         return false;
       } catch (error) {
-        const message = getErrorMessage(error, 'Failed to load results');
-        console.error('[useSusaProjects] fetchAnalysisResults:', message);
-        addNotification(message, 'error');
-        setCurrentAnalysis(null);
+        // Only show error if this is still the active request
+        if (thisRequestId === requestIdRef.current) {
+          const message = getErrorMessage(error, 'Failed to load results');
+          console.error('[useSusaProjects] fetchAnalysisResults:', message);
+          addNotification(message, 'error');
+          setCurrentAnalysis(null);
+        }
         return false;
       } finally {
-        setIsFetchingResults(false);
+        // Only update loading state if this is still the active request
+        if (thisRequestId === requestIdRef.current) {
+          setIsFetchingResults(false);
+        }
       }
     },
-    [addNotification, isFetchingResults]
+    [addNotification]
   );
 
   // ============================
@@ -159,20 +170,31 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
   // ============================
   const performPreAnalysis = useCallback(
     async (uploadId: number): Promise<boolean> => {
+      // Generate unique request ID for race condition prevention
+      const thisRequestId = ++requestIdRef.current;
+
       setCurrentAnalysis(null);
       setMappingData(null);
       addNotification('Initiating pre-analysis...', 'info');
 
       try {
         const result = await susaApi.preAnalyze(uploadId);
+
+        // Check if this request is still the latest one
+        if (thisRequestId !== requestIdRef.current) {
+          return false;
+        }
+
         setMappingData(result);
         addNotification('Pre-analysis complete. Ready for mapping.', 'success');
         return true;
       } catch (error) {
-        const message = getErrorMessage(error, 'Pre-analysis failed');
-        console.error('[useSusaProjects] performPreAnalysis:', message);
-        addNotification(`Error: ${message}`, 'error');
-        fetchProjects();
+        if (thisRequestId === requestIdRef.current) {
+          const message = getErrorMessage(error, 'Pre-analysis failed');
+          console.error('[useSusaProjects] performPreAnalysis:', message);
+          addNotification(`Error: ${message}`, 'error');
+          fetchProjects();
+        }
         return false;
       }
     },
@@ -262,6 +284,9 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
   // ============================
   const selectProject = useCallback(
     async (projectId: number): Promise<void> => {
+      // Increment request ID - this will invalidate any pending requests
+      const thisRequestId = ++requestIdRef.current;
+
       setCurrentProjectId(projectId);
       setCurrentAnalysis(null);
       setMappingData(null);
@@ -274,12 +299,17 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
 
       setCurrentProjectStatus(project.status);
 
+      // Note: performPreAnalysis and fetchAnalysisResults already use requestIdRef
+      // so they will automatically check if they're still the active request
       if (project.status === 'Ready for Mapping' || project.status === 'Mapping in Progress') {
         await performPreAnalysis(projectId);
       } else if (project.status === 'Completed') {
         await fetchAnalysisResults(projectId);
       } else {
-        addNotification(`Project ${projectId} is currently ${project.status}. Please wait.`, 'info');
+        // Only show notification if this is still the active request
+        if (thisRequestId === requestIdRef.current) {
+          addNotification(`Project ${projectId} is currently ${project.status}. Please wait.`, 'info');
+        }
       }
     },
     [projects, fetchProjects, performPreAnalysis, fetchAnalysisResults, addNotification]
