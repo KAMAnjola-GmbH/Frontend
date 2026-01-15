@@ -1,10 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-import type { UserProfile } from '@auth0/nextjs-auth0/client';
+import { User } from '@auth0/nextjs-auth0/types';
 
 interface AuthAreaProps {
-  user: UserProfile | undefined;
+  user: User | null | undefined;
   isLoading: boolean;
 }
 
