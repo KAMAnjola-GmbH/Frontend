@@ -36,7 +36,7 @@ export default function Navbar() {
             </svg>
           </div>
 
-          <Link href="/" className="hover:text-white transition" data-i18n-key="contacts">Contacts</Link>
+          <Link href="contact" className="hover:text-white transition" data-i18n-key="contacts">Contacts</Link>
           <LanguageDropdown />
 
           <div className="w-px h-5 bg-gray-700"></div>

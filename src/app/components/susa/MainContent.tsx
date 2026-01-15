@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { AnalysisResult, PreAnalysisResult, ProjectStatus } from '@/types/susa';
 import MappingUI from './MappingInterface';
 import AnalysisReport from './AnalysisReport';
@@ -22,14 +22,6 @@ const MainContent: React.FC<MainContentProps> = ({
   isFetchingResults,
   saveMappingsAndRunAnalysis,
 }) => {
-  const viewerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (viewerRef.current) {
-      // Viewer not used in SUSA
-    }
-  }, []);
-
   const renderContent = () => {
     if (currentProjectId && mappingData) {
       return (

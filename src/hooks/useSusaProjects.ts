@@ -114,6 +114,7 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
         return false;
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- selectProject is defined later but stable
     [addNotification, fetchProjects]
   );
 

@@ -8,14 +8,12 @@ import RenameModal from './modals/RenameModal';
 //import { viewerControls } from '@/lib/utils/viewer';
 
 interface ProjectListProps {
-    projects: SusaProject[]; // SusaProject has ID as number
+    projects: SusaProject[];
     isLoading: boolean;
-    currentProjectId: number | null; // ID is number
-    currentProjectStatus: ProjectStatus | null; // Added status
+    currentProjectId: number | null;
     selectProject: (id: number) => void;
     deleteProject: (id: number) => void;
     renameProject: (id: number, newName: string) => Promise<boolean>;
-    runSimulation: (id: number) => Promise<boolean | void>; // Mapped to fetchAnalysisResults
 }
 
 const getStatusColorClass = (status: ProjectStatus) => {
@@ -34,11 +32,9 @@ const ProjectList: React.FC<ProjectListProps> = ({
     projects,
     isLoading,
     currentProjectId,
-    currentProjectStatus,
     selectProject,
     deleteProject,
     renameProject,
-    runSimulation,
 }) => {
     // State to manage context menu visibility and position
     const [menuState, setMenuState] = useState<{
@@ -85,17 +81,20 @@ const ProjectList: React.FC<ProjectListProps> = ({
 
     // Close context menu on any click outside
     React.useEffect(() => {
+        // Only add listener when menu is open
+        if (!menuState?.isOpen) return;
+
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
             // Only close if click is not inside a modal or a project button
             const isProjectButton = target.closest('[data-project-id]');
-            if (menuState?.isOpen && !isProjectButton) {
+            if (!isProjectButton) {
                 setMenuState(null);
             }
         };
         window.addEventListener('click', handleClickOutside);
         return () => window.removeEventListener('click', handleClickOutside);
-    }, [menuState]);
+    }, [menuState?.isOpen]);
 
     const handleDeleteConfirm = () => {
         if (menuState) {

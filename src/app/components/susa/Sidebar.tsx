@@ -11,11 +11,9 @@ const SusaSidebar: React.FC = () => {
     projects,
     isLoading,
     currentProjectId,
-    currentProjectStatus,
     selectProject,
     deleteProject,
     renameProject,
-    fetchAnalysisResults,
     uploadFile,
   } = useSusaContext();
 
@@ -26,16 +24,13 @@ const SusaSidebar: React.FC = () => {
       acceptedFileTypes=".csv,.xlsx"
       onUpload={uploadFile}
     >
-      {/* We inject the Susa-specific List here */}
       <ProjectList
         projects={projects}
         isLoading={isLoading}
         currentProjectId={currentProjectId}
-        currentProjectStatus={currentProjectStatus}
         selectProject={selectProject}
         deleteProject={deleteProject}
         renameProject={renameProject}
-        runSimulation={fetchAnalysisResults}
       />
     </GenericSidebar>
   );

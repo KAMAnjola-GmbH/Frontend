@@ -30,8 +30,11 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
     setShowWarning(false);
   };
 
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   const handleSave = async () => {
     setIsSaving(true);
+    setSaveError(null);
     const customMappings: Record<string, string> = {};
     let allMapped = true;
 
@@ -52,7 +55,10 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
       return;
     }
 
-    await onSave(uploadId, customMappings);
+    const success = await onSave(uploadId, customMappings);
+    if (!success) {
+      setSaveError('Failed to save mappings. Please try again.');
+    }
     setIsSaving(false);
   };
 
@@ -71,6 +77,13 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
           <p>
             Some accounts are not mapped. They will be excluded from the analysis. Click &apos;Save & Run Analysis&apos; again to confirm.
           </p>
+        </div>
+      )}
+
+      {saveError && (
+        <div className="mb-4 p-3 bg-red-500/20 text-red-300 rounded-md text-sm border border-red-500/50">
+          <p className="font-semibold">Error:</p>
+          <p>{saveError}</p>
         </div>
       )}
 

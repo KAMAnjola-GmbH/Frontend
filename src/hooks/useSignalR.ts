@@ -6,11 +6,6 @@ import * as signalR from '@microsoft/signalr';
 import { JobUpdateData } from '../types/susa';
 import { useNotifications } from './useNotifications';
 
-interface SignalRState {
-  connection: signalR.HubConnection | null;
-  isConnected: boolean;
-}
-
 const SIGNALR_BASE_URL = process.env.NEXT_PUBLIC_SIGNALR_URL;
 const HUB_URL = SIGNALR_BASE_URL
   ? `${SIGNALR_BASE_URL}/simulationHub`
@@ -140,5 +135,5 @@ export const useSignalR = (onJobUpdate: (data: JobUpdateData) => void) => {
     };
   }, [addNotification]);
 
-  return { connection: connectionRef.current, isConnected };
+  return { isConnected };
 };

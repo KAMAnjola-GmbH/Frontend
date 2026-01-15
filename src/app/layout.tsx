@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import React from 'react';
 import { Auth0Provider } from "@auth0/nextjs-auth0/client";
 import Navbar from '@/app/components/ui/navigation/Navbar';
+import { CookieConsentProvider } from '@/app/context/CookieConsentContext';
+import CookieConsentBanner from '@/app/components/ui/CookieConsentBanner';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -15,13 +17,15 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
     <html lang="en" className="h-full scroll-smooth">
       <body className={`h-full antialiased bg-gray-900 text-gray-200 flex flex-col`}>
         <Auth0Provider>
-          
-          <Navbar />
+          <CookieConsentProvider>
+            <Navbar />
 
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-            {children}
-          </div>
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+              {children}
+            </div>
 
+            <CookieConsentBanner />
+          </CookieConsentProvider>
         </Auth0Provider>
         
         

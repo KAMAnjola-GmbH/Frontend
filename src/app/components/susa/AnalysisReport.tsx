@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { AnalysisResult, KpiRow } from '@/types/susa';
+import { AnalysisResult } from '@/types/susa';
 import KostenstrukturChart from './charts/KostenstrukturChart';
 import KostenstrukturCategoryChart from './charts/KostenstrukturCategoryChart';
 import FinanzUebersichtChart from './charts/FinanzUebersichtChart';

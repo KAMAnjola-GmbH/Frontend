@@ -1,22 +1,30 @@
 'use client';
 
 import Image from 'next/image';
+import type { UserProfile } from '@auth0/nextjs-auth0/client';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function AuthArea({ user, isLoading }: { user: any, isLoading: boolean }) {
+interface AuthAreaProps {
+  user: UserProfile | undefined;
+  isLoading: boolean;
+}
+
+export default function AuthArea({ user, isLoading }: AuthAreaProps) {
   if (isLoading) return <div className="font-semibold">Loading...</div>;
 
   if (user) {
     return (
       <div className="flex items-center gap-3">
         <span className="font-semibold">{user.name}</span>
-        <div style={{borderRadius: '30px', overflow: 'hidden'}}>
-
-        <Image src={user.picture}
-        alt='profile picture'
-        width={30}
-        height={30}/>
-        </div>
+        {user.picture && (
+          <div style={{borderRadius: '30px', overflow: 'hidden'}}>
+            <Image
+              src={user.picture}
+              alt='profile picture'
+              width={30}
+              height={30}
+            />
+          </div>
+        )}
 
         <a
           href="/auth/logout"

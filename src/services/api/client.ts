@@ -53,7 +53,12 @@ export class ApiError extends Error {
  */
 interface RequestOptions extends Omit<RequestInit, 'body'> {
   body?: unknown;
+  /** Request timeout in milliseconds (default: 30000) */
+  timeout?: number;
 }
+
+/** Default request timeout: 30 seconds */
+const DEFAULT_TIMEOUT = 30000;
 
 /**
  * Central API client for all microservices.
@@ -68,7 +73,7 @@ export const apiClient = {
    */
   async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const url = `${config.apiProxyBaseUrl}${endpoint}`;
-    const { body, headers: customHeaders, ...restOptions } = options;
+    const { body, headers: customHeaders, timeout = DEFAULT_TIMEOUT, ...restOptions } = options;
 
     const headers: HeadersInit = {
       ...(customHeaders as Record<string, string>),
@@ -84,15 +89,31 @@ export const apiClient = {
       console.log(`[API] ${options.method || 'GET'} ${endpoint}`);
     }
 
-    const response = await fetch(url, {
-      ...restOptions,
-      headers,
-      body: body instanceof FormData
-        ? body
-        : body
-          ? JSON.stringify(body)
-          : undefined,
-    });
+    // Setup timeout with AbortController
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        ...restOptions,
+        headers,
+        signal: controller.signal,
+        body: body instanceof FormData
+          ? body
+          : body
+            ? JSON.stringify(body)
+            : undefined,
+      });
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new ApiError(408, 'Request Timeout', { message: `Request timed out after ${timeout}ms` });
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     // Handle errors
     if (!response.ok) {
@@ -175,16 +196,31 @@ export const apiClient = {
   /**
    * Download file as Blob.
    * @param endpoint - API endpoint
+   * @param timeout - Request timeout in milliseconds (default: 60000 for downloads)
    * @returns Promise with Blob
    */
-  async download(endpoint: string): Promise<Blob> {
+  async download(endpoint: string, timeout = 60000): Promise<Blob> {
     const url = `${config.apiProxyBaseUrl}${endpoint}`;
 
     if (process.env.NODE_ENV === 'development') {
       console.log(`[API] GET (download) ${endpoint}`);
     }
 
-    const response = await fetch(url);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    let response: Response;
+    try {
+      response = await fetch(url, { signal: controller.signal });
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new ApiError(408, 'Request Timeout', { message: `Download timed out after ${timeout}ms` });
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     if (!response.ok) {
       throw new ApiError(response.status, response.statusText);

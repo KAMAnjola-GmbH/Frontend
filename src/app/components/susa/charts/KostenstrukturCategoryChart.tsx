@@ -4,7 +4,6 @@
 import React, { useEffect, useRef } from 'react';
 import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { KpiRow } from '@/types/susa';
-import { Vault } from 'lucide-react';
 
 interface KostenstrukturCategoryChartProps {
     kpiData: KpiRow[];
