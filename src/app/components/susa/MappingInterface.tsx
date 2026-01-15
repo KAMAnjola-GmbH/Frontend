@@ -13,10 +13,10 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
   const { unmappedAccounts: rawAccounts, availableCategories } = data;
 
   // Normalize accounts - handle both uppercase (Konto/Bezeichnung) and lowercase (konto/bezeichnung)
-  const unmappedAccounts = rawAccounts.map((acc: Record<string, string>) => ({
-    konto: acc.konto || acc.Konto || '',
-    bezeichnung: acc.bezeichnung || acc.Bezeichnung || ''
-  }));
+  const unmappedAccounts = rawAccounts.map((acc) => ({
+  konto: acc.konto || acc.Konto || '',
+  bezeichnung: acc.bezeichnung || acc.Bezeichnung || ''
+}));
 
   const [mappings, setMappings] = useState<Record<string, string>>(
     unmappedAccounts.reduce((acc, account) => ({ ...acc, [account.konto]: '' }), {})
