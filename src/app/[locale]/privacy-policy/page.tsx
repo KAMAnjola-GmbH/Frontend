@@ -79,7 +79,6 @@ export default function PrivacyPolicyPage() {
                   12345 Berlin<br />
                   Deutschland<br /><br />
                   E-Mail:{' '}
-                  // eslint-disable-next-line @next/next/no-html-link-for-pages
                   <a href="mailto:datenschutz@r0sita.com" className="text-cyan-400 hover:text-cyan-300 transition">
                     datenschutz@r0sita.com
                   </a>
