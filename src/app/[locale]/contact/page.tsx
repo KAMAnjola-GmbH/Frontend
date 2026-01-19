@@ -167,7 +167,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-white font-medium">{t('email_label')}</h3>
-                    // eslint-disable-next-line @next/next/no-html-link-for-pages
+                            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                     <a href="mailto:info@r0sita.com" className="text-cyan-400 hover:text-cyan-300 transition">
                       info@r0sita.com
                     </a>

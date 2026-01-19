@@ -13,6 +13,7 @@ export default function AuthArea({ user, isLoading }: AuthAreaProps) {
 
   if (user) {
     return (
+
       <div className="flex items-center gap-3">
         <span className="font-semibold">{user.name}</span>
         {user.picture && (
@@ -25,7 +26,7 @@ export default function AuthArea({ user, isLoading }: AuthAreaProps) {
             />
           </div>
         )}
-        // eslint-disable-next-line @next/next/no-html-link-for-pages
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href="/auth/logout"
           className="bg-gray-700 hover:bg-red-600 text-white font-semibold p-1.5 rounded-full transition"
@@ -41,9 +42,9 @@ export default function AuthArea({ user, isLoading }: AuthAreaProps) {
 
   return (
     <div className="flex items-center gap-4">
-      // eslint-disable-next-line @next/next/no-html-link-for-pages
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
       <a href="/auth/login" className="hover:text-white transition font-semibold">Sign in</a>
-      // eslint-disable-next-line @next/next/no-html-link-for-pages
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
       <a href="/auth/login" className="bg-pink-600 hover:bg-pink-700 text-white font-semibold py-1 px-3 rounded-md transition">
         Create account
       </a>
