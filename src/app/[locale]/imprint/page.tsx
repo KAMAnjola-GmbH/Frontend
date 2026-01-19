@@ -58,6 +58,7 @@ export default function ImprintPage() {
               <p className="text-gray-300 leading-relaxed">
                 Telefon: +49 (0) 30 123456789<br />
                 E-Mail:{' '}
+                // eslint-disable-next-line @next/next/no-html-link-for-pages
                 <a href="mailto:info@r0sita.com" className="text-cyan-400 hover:text-cyan-300 transition">
                   info@r0sita.com
                 </a>
