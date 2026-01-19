@@ -8,27 +8,18 @@ const intlMiddleware = createIntlMiddleware(routing);
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip i18n for API routes and Auth0 routes
-  if (
-    pathname.startsWith('/api/') ||
-    pathname.startsWith('/auth/')
-  ) {
+  // API routes - only Auth0 middleware, no i18n
+  if (pathname.startsWith('/api/')) {
     return auth0.middleware(request);
   }
 
-  // Apply i18n middleware first
-  const intlResponse = intlMiddleware(request);
-
-  // For protected routes, also run Auth0 middleware
-  // Auth0 will handle the response appropriately
-  const authResponse = await auth0.middleware(request);
-
-  // If Auth0 needs to redirect (e.g., to login), use that response
-  if (authResponse && authResponse.status !== 200) {
-    return authResponse;
+  // Auth routes - only Auth0 middleware, no i18n
+  if (pathname.startsWith('/auth/')) {
+    return auth0.middleware(request);
   }
 
-  return intlResponse;
+  // All other routes - apply i18n middleware
+  return intlMiddleware(request);
 }
 
 export const config = {
@@ -38,7 +29,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     * - files with extensions (e.g., .png, .jpg, .css, .js)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)',  
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\..*).*)',
   ],
 };

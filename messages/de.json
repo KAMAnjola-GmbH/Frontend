@@ -148,5 +148,40 @@
   "language": {
     "en": "English",
     "de": "Deutsch"
+  },
+  "products": {
+    "welcome": "Willkommen, {name}",
+    "more_coming": "Weitere Produkte folgen"
+  },
+  "susa": {
+    "title": "Susa Analytics",
+    "upload_label": "Susa CSV hochladen",
+    "home": "Startseite",
+    "items": "Elemente",
+    "upload": "Hochladen",
+    "loading_projects": "Projekte werden geladen...",
+    "no_projects": "Keine Projekte gefunden.",
+    "project_actions": "Projektaktionen",
+    "view_report": "Bericht anzeigen",
+    "start_mapping": "Zuordnung/Analyse starten",
+    "continue_mapping": "Zuordnung fortsetzen",
+    "view_status": "Status anzeigen",
+    "analyze": "Analysieren",
+    "rename": "Umbenennen",
+    "delete": "Löschen",
+    "loading_results": "Analyseergebnisse werden geladen...",
+    "job_status": "Auftrag {id} ist {status}.",
+    "will_notify": "Sie werden benachrichtigt, wenn er abgeschlossen ist.",
+    "select_project": "Wählen Sie ein Projekt oder laden Sie eine neue Datei hoch, um die Analyse zu starten.",
+    "mapping_title": "Kontozuordnung (Schritt 2/3)",
+    "mapping_description": "Bitte weisen Sie jedem der unten aufgeführten nicht zugeordneten Konten eine Kategorie zu.",
+    "warning": "Warnung:",
+    "unmapped_warning": "Einige Konten sind nicht zugeordnet. Sie werden von der Analyse ausgeschlossen. Klicken Sie erneut auf 'Speichern & Analyse starten' zur Bestätigung.",
+    "error": "Fehler:",
+    "select_category": "-- Bitte wählen --",
+    "no_unmapped": "Keine nicht zugeordneten Konten gefunden. Bereit für die vollständige Analyse.",
+    "saving": "Wird gespeichert...",
+    "save_and_run": "Speichern & Analyse starten",
+    "save_error": "Zuordnungen konnten nicht gespeichert werden. Bitte versuchen Sie es erneut."
   }
 }

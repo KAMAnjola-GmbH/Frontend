@@ -2,7 +2,8 @@
 'use client';
 
 import React, { useState, ReactNode } from 'react';
-import Link from 'next/link'; // Changed from lucide-react to next/link for navigation
+import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 interface GenericSidebarProps {
   title?: string;
@@ -14,13 +15,14 @@ interface GenericSidebarProps {
 }
 
 const GenericSidebar: React.FC<GenericSidebarProps> = ({
-  title = "Products And Services",
+  title,
   homeLink = "/",
-  uploadLabel = "Upload File",
+  uploadLabel,
   acceptedFileTypes = ".csv,.xlsx",
   onUpload,
   children
 }) => {
+  const t = useTranslations('susa');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileInputKey, setFileInputKey] = useState(() => Date.now());
 
@@ -49,23 +51,23 @@ const GenericSidebar: React.FC<GenericSidebarProps> = ({
   return (
     <aside className="w-full h-full flex flex-col min-h-0 bg-[#001e5f]">
       <div className="p-4 flex-shrink-0">
-        <div className="text-center font-semibold text-lg text-white/90">{title}</div>
+        <div className="text-center font-semibold text-lg text-white/90">{title || t('title')}</div>
 
         <Link
           href={homeLink}
           className="block px-4 py-2.5 mt-2 text-center rounded-md hover:bg-blue-500/50 text-white transition font-semibold"
         >
-          Home
+          {t('home')}
         </Link>
 
         <h2 className="text-lg font-semibold mt-6 mb-2 text-white border-t border-gray-700 pt-4">
-          Items
+          {t('items')}
         </h2>
 
         {/* Conditional Rendering: Only show upload if a handler is provided */}
         {onUpload && (
           <div className="mb-4 p-3 bg-gray-900/50 rounded-lg">
-            <h2 className="text-base font-bold mb-2 text-indigo-300">{uploadLabel}</h2>
+            <h2 className="text-base font-bold mb-2 text-indigo-300">{uploadLabel || t('upload_label')}</h2>
             <input
               key={fileInputKey}
               type="file"
@@ -78,7 +80,7 @@ const GenericSidebar: React.FC<GenericSidebarProps> = ({
               disabled={!selectedFile}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 w-full mt-2 transition disabled:bg-gray-500 disabled:opacity-70 font-semibold text-sm"
             >
-              Upload
+              {t('upload')}
             </button>
           </div>
         )}

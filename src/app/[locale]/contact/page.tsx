@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import Footer from '@/app/components/ui/Footer';
 
 export default function ContactPage() {
+  const t = useTranslations('contact');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,7 +25,6 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     // TODO: Implement actual form submission to backend
-    // For now, simulate a submission
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     setSubmitted(true);
@@ -35,11 +36,11 @@ export default function ContactPage() {
       {/* Header */}
       <section className="py-16 md:py-20 bg-slate-800 border-b border-gray-700">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-white" data-i18n-key="contact_title">
-            Kontakt
+          <h1 className="text-4xl md:text-5xl font-bold text-white">
+            {t('title')}
           </h1>
-          <p className="text-gray-400 mt-4 text-lg" data-i18n-key="contact_subtitle">
-            Haben Sie Fragen? Wir freuen uns von Ihnen zu horen.
+          <p className="text-gray-400 mt-4 text-lg">
+            {t('subtitle')}
           </p>
         </div>
       </section>
@@ -50,24 +51,24 @@ export default function ContactPage() {
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-bold text-white mb-6" data-i18n-key="contact_form_title">
-                Nachricht senden
+              <h2 className="text-2xl font-bold text-white mb-6">
+                {t('form_title')}
               </h2>
 
               {submitted ? (
                 <div className="bg-green-900/30 border border-green-700 rounded-lg p-6">
-                  <h3 className="text-green-400 font-semibold text-lg mb-2" data-i18n-key="contact_success_title">
-                    Nachricht gesendet!
+                  <h3 className="text-green-400 font-semibold text-lg mb-2">
+                    {t('success_title')}
                   </h3>
-                  <p className="text-gray-300" data-i18n-key="contact_success_message">
-                    Vielen Dank fur Ihre Nachricht. Wir werden uns so schnell wie moglich bei Ihnen melden.
+                  <p className="text-gray-300">
+                    {t('success_message')}
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2" data-i18n-key="contact_name">
-                      Name *
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                      {t('name')}
                     </label>
                     <input
                       type="text"
@@ -77,13 +78,12 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={handleChange}
                       className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition"
-                      placeholder="Ihr Name"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2" data-i18n-key="contact_email">
-                      E-Mail *
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                      {t('email')}
                     </label>
                     <input
                       type="email"
@@ -93,13 +93,12 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleChange}
                       className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition"
-                      placeholder="ihre@email.com"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2" data-i18n-key="contact_subject">
-                      Betreff *
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2">
+                      {t('subject')}
                     </label>
                     <select
                       id="subject"
@@ -109,17 +108,17 @@ export default function ContactPage() {
                       onChange={handleChange}
                       className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition"
                     >
-                      <option value="" data-i18n-key="contact_select_subject">Bitte wahlen...</option>
-                      <option value="general" data-i18n-key="contact_subject_general">Allgemeine Anfrage</option>
-                      <option value="support" data-i18n-key="contact_subject_support">Technischer Support</option>
-                      <option value="sales" data-i18n-key="contact_subject_sales">Vertrieb & Preise</option>
-                      <option value="partnership" data-i18n-key="contact_subject_partnership">Partnerschaft</option>
+                      <option value="">{t('select_subject')}</option>
+                      <option value="general">{t('subject_general')}</option>
+                      <option value="support">{t('subject_support')}</option>
+                      <option value="sales">{t('subject_sales')}</option>
+                      <option value="partnership">{t('subject_partnership')}</option>
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2" data-i18n-key="contact_message">
-                      Nachricht *
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
+                      {t('message')}
                     </label>
                     <textarea
                       id="message"
@@ -129,7 +128,6 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={handleChange}
                       className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition resize-none"
-                      placeholder="Ihre Nachricht..."
                     />
                   </div>
 
@@ -144,10 +142,10 @@ export default function ContactPage() {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                         </svg>
-                        <span data-i18n-key="contact_sending">Wird gesendet...</span>
+                        <span>{t('sending')}</span>
                       </span>
                     ) : (
-                      <span data-i18n-key="contact_send">Nachricht senden</span>
+                      <span>{t('send')}</span>
                     )}
                   </button>
                 </form>
@@ -156,8 +154,8 @@ export default function ContactPage() {
 
             {/* Contact Info */}
             <div>
-              <h2 className="text-2xl font-bold text-white mb-6" data-i18n-key="contact_info_title">
-                Kontaktinformationen
+              <h2 className="text-2xl font-bold text-white mb-6">
+                {t('info_title')}
               </h2>
 
               <div className="space-y-6">
@@ -168,7 +166,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-white font-medium" data-i18n-key="contact_email_label">E-Mail</h3>
+                    <h3 className="text-white font-medium">{t('email_label')}</h3>
                     <a href="mailto:info@r0sita.com" className="text-cyan-400 hover:text-cyan-300 transition">
                       info@r0sita.com
                     </a>
@@ -183,7 +181,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-white font-medium" data-i18n-key="contact_address_label">Adresse</h3>
+                    <h3 className="text-white font-medium">{t('address_label')}</h3>
                     <p className="text-gray-400">
                       r0sita GmbH<br />
                       Musterstrasse 123<br />
@@ -200,10 +198,9 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-white font-medium" data-i18n-key="contact_hours_label">Geschaftszeiten</h3>
-                    <p className="text-gray-400" data-i18n-key="contact_hours">
-                      Montag - Freitag: 09:00 - 18:00<br />
-                      Samstag & Sonntag: Geschlossen
+                    <h3 className="text-white font-medium">{t('hours_label')}</h3>
+                    <p className="text-gray-400 whitespace-pre-line">
+                      {t('hours')}
                     </p>
                   </div>
                 </div>

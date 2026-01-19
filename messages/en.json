@@ -148,5 +148,40 @@
   "language": {
     "en": "English",
     "de": "Deutsch"
+  },
+  "products": {
+    "welcome": "Welcome, {name}",
+    "more_coming": "More Products Coming"
+  },
+  "susa": {
+    "title": "Susa Analytics",
+    "upload_label": "Upload Susa CSV",
+    "home": "Home",
+    "items": "Items",
+    "upload": "Upload",
+    "loading_projects": "Loading projects...",
+    "no_projects": "No projects found.",
+    "project_actions": "Project Actions",
+    "view_report": "View Report",
+    "start_mapping": "Start Mapping/Analysis",
+    "continue_mapping": "Continue Mapping",
+    "view_status": "View Status",
+    "analyze": "Analyze",
+    "rename": "Rename",
+    "delete": "Delete",
+    "loading_results": "Loading analysis results...",
+    "job_status": "Job {id} is {status}.",
+    "will_notify": "You will be notified when it's complete.",
+    "select_project": "Select a project or upload a new file to start analysis.",
+    "mapping_title": "Account Mapping (Step 2/3)",
+    "mapping_description": "Please assign a category to each of the unmapped accounts below.",
+    "warning": "Warning:",
+    "unmapped_warning": "Some accounts are not mapped. They will be excluded from the analysis. Click 'Save & Run Analysis' again to confirm.",
+    "error": "Error:",
+    "select_category": "-- Please Select --",
+    "no_unmapped": "No unmapped accounts found. Ready for full analysis.",
+    "saving": "Saving...",
+    "save_and_run": "Save & Run Analysis",
+    "save_error": "Failed to save mappings. Please try again."
   }
 }
