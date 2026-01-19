@@ -1,19 +1,21 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import NavLinks from './NavLinks';
 import LanguageDropdown from './LanguageDropdown';
 import AuthArea from './AuthArea';
 
 export default function Navbar() {
   const { user, isLoading } = useUser();
+  const t = useTranslations('nav');
 
   return (
     <header className="sticky top-0 left-0 right-0 z-50 bg-[#001e5f] border-b border-gray-700">
       <nav className="container mx-auto px-4 py-2 flex justify-between items-center">
-        
+
         {/* Logo + Navigation Links */}
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
@@ -36,7 +38,9 @@ export default function Navbar() {
             </svg>
           </div>
 
-          <Link href="contact" className="hover:text-white transition" data-i18n-key="contacts">Contacts</Link>
+          <Link href="/contact" className="hover:text-white transition">
+            {t('contacts')}
+          </Link>
           <LanguageDropdown />
 
           <div className="w-px h-5 bg-gray-700"></div>

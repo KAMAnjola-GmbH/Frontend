@@ -63,7 +63,7 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
   };
 
   return (
-    <div className="flex flex-col flex-grow bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 h-full">
+    <div className="flex flex-col grow bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 h-full">
       <h3 className="text-xl font-bold mb-2 text-white">
         Account Mapping (Step 2/3)
       </h3>
@@ -89,7 +89,7 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
 
       <ul
         id="unmapped-accounts-list"
-        className="space-y-3 flex-grow overflow-y-auto pr-2 custom-scrollbar"
+        className="space-y-3 grow overflow-y-auto pr-2 custom-scrollbar"
       >
         {unmappedAccounts.length > 0 ? (
           unmappedAccounts.map(account => (
@@ -123,7 +123,7 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
         )}
       </ul>
 
-      <div className="flex justify-end mt-6 flex-shrink-0">
+      <div className="flex justify-end mt-6 shrink-0">
         <button
           id="save-mappings-btn"
           onClick={handleSave}

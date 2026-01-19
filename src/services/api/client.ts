@@ -1,9 +1,4 @@
 /**
- * Bazowy klient HTTP dla wszystkich mikroserwisów.
- * Wszystkie requesty przechodzą przez Next.js API Proxy (/api/proxy).
- *
- * @example
- * // W pliku susa.ts:
  * import { apiClient } from './client';
  * export const susaApi = {
  *   getProjects: () => apiClient.get<Project[]>('/susa'),

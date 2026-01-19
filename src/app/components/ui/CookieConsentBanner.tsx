@@ -2,14 +2,16 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { useCookieConsentContext } from '@/app/context/CookieConsentContext';
 
 export default function CookieConsentBanner() {
-  const { showBanner, acceptAll, acceptNecessaryOnly, acceptCustom, consent } = useCookieConsentContext();
+  const { showBanner, acceptAll, acceptNecessaryOnly, acceptCustom } = useCookieConsentContext();
   const [showSettings, setShowSettings] = useState(false);
   const [analyticsChecked, setAnalyticsChecked] = useState(false);
   const [marketingChecked, setMarketingChecked] = useState(false);
+  const t = useTranslations('cookie');
 
   if (!showBanner) return null;
 
@@ -34,14 +36,13 @@ export default function CookieConsentBanner() {
             // Main Banner View
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-2" data-i18n-key="cookie_title">
-                  Cookie-Einstellungen
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {t('title')}
                 </h3>
-                <p className="text-gray-300 text-sm" data-i18n-key="cookie_description">
-                  Wir verwenden Cookies, um Ihre Erfahrung zu verbessern. Sie haben die Kontrolle
-                  welche Cookies Sie akzeptieren.{' '}
+                <p className="text-gray-300 text-sm">
+                  {t('description')}{' '}
                   <Link href="/privacy-policy" className="text-cyan-400 hover:text-cyan-300 underline">
-                    Datenschutzerklarung
+                    {t('privacy_link')}
                   </Link>
                 </p>
               </div>
@@ -49,23 +50,20 @@ export default function CookieConsentBanner() {
                 <button
                   onClick={() => setShowSettings(true)}
                   className="px-4 py-2 text-sm text-gray-300 hover:text-white border border-gray-600 hover:border-gray-500 rounded-lg transition"
-                  data-i18n-key="cookie_settings"
                 >
-                  Einstellungen
+                  {t('settings')}
                 </button>
                 <button
                   onClick={acceptNecessaryOnly}
                   className="px-4 py-2 text-sm text-gray-300 hover:text-white bg-gray-700 hover:bg-gray-600 rounded-lg transition"
-                  data-i18n-key="cookie_reject"
                 >
-                  Nur Notwendige
+                  {t('reject')}
                 </button>
                 <button
                   onClick={acceptAll}
                   className="px-4 py-2 text-sm text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition font-medium"
-                  data-i18n-key="cookie_accept_all"
                 >
-                  Alle akzeptieren
+                  {t('accept_all')}
                 </button>
               </div>
             </div>
@@ -73,8 +71,8 @@ export default function CookieConsentBanner() {
             // Settings View
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white" data-i18n-key="cookie_settings_title">
-                  Cookie-Einstellungen
+                <h3 className="text-lg font-semibold text-white">
+                  {t('settings_title')}
                 </h3>
                 <button
                   onClick={() => setShowSettings(false)}
@@ -98,12 +96,11 @@ export default function CookieConsentBanner() {
                     />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-white font-medium" data-i18n-key="cookie_necessary">
-                      Notwendige Cookies
+                    <h4 className="text-white font-medium">
+                      {t('necessary')}
                     </h4>
-                    <p className="text-gray-400 text-sm mt-1" data-i18n-key="cookie_necessary_desc">
-                      Diese Cookies sind fur die Grundfunktionen der Website erforderlich und konnen
-                      nicht deaktiviert werden.
+                    <p className="text-gray-400 text-sm mt-1">
+                      {t('necessary_desc')}
                     </p>
                   </div>
                 </div>
@@ -119,12 +116,11 @@ export default function CookieConsentBanner() {
                     />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-white font-medium" data-i18n-key="cookie_analytics">
-                      Analytische Cookies
+                    <h4 className="text-white font-medium">
+                      {t('analytics')}
                     </h4>
-                    <p className="text-gray-400 text-sm mt-1" data-i18n-key="cookie_analytics_desc">
-                      Diese Cookies helfen uns zu verstehen, wie Besucher mit unserer Website
-                      interagieren, indem sie anonyme Informationen sammeln.
+                    <p className="text-gray-400 text-sm mt-1">
+                      {t('analytics_desc')}
                     </p>
                   </div>
                 </div>
@@ -140,12 +136,11 @@ export default function CookieConsentBanner() {
                     />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-white font-medium" data-i18n-key="cookie_marketing">
-                      Marketing Cookies
+                    <h4 className="text-white font-medium">
+                      {t('marketing')}
                     </h4>
-                    <p className="text-gray-400 text-sm mt-1" data-i18n-key="cookie_marketing_desc">
-                      Diese Cookies werden verwendet, um Werbung relevanter fur Sie zu gestalten
-                      und die Wirksamkeit von Werbekampagnen zu messen.
+                    <p className="text-gray-400 text-sm mt-1">
+                      {t('marketing_desc')}
                     </p>
                   </div>
                 </div>
@@ -155,16 +150,14 @@ export default function CookieConsentBanner() {
                 <button
                   onClick={() => setShowSettings(false)}
                   className="px-4 py-2 text-sm text-gray-300 hover:text-white border border-gray-600 hover:border-gray-500 rounded-lg transition"
-                  data-i18n-key="cookie_cancel"
                 >
-                  Abbrechen
+                  {t('cancel')}
                 </button>
                 <button
                   onClick={handleSaveCustom}
                   className="px-4 py-2 text-sm text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition font-medium"
-                  data-i18n-key="cookie_save"
                 >
-                  Auswahl speichern
+                  {t('save')}
                 </button>
               </div>
             </div>

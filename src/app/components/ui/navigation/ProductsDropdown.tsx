@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 
 export default function ProductsDropdown() {
   const [activeMenu, setActiveMenu] = useState('default-content');
+  const t = useTranslations('nav');
   const getPanelClass = (menu: string) => activeMenu === menu ? 'content-panel' : 'content-panel hidden';
 
   return (
@@ -13,8 +15,8 @@ export default function ProductsDropdown() {
       className="relative group"
       onMouseLeave={() => setActiveMenu('default-content')}
     >
-      <button className="hover:text-pink-400 transition flex items-center gap-1" data-i18n-key="products">
-        Products
+      <button className="hover:text-pink-400 transition flex items-center gap-1">
+        {t('products')}
         <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
@@ -24,7 +26,7 @@ export default function ProductsDropdown() {
       <div className="absolute top-full left-0 w-3xl max-w-5xl opacity-0 group-hover:opacity-100 transform -translate-y-1 group-hover:translate-y-0 transition-all duration-300 z-50 pointer-events-none group-hover:pointer-events-auto">
         <div className="bg-[#0f172a]/80 backdrop-blur-sm border border-gray-700 rounded-lg shadow-xl overflow-hidden">
           <div className="flex text-white">
-            
+
             {/* LEFT MENU */}
             <div className="w-1/3 bg-black/20">
               <ul className="p-2 space-y-1">
@@ -54,7 +56,7 @@ export default function ProductsDropdown() {
                 <h3 className="text-xl font-bold text-white">Analytik</h3>
                 <Link href="/products" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">Digital Twin Platform</Link>
                 <Link href="/products" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">ParaView Viewer</Link>
-                <Link href="products/susa" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">KPI Calculation</Link>
+                <Link href="/products/susa" className="block px-3 py-1.5 rounded-md hover:bg-pink-600 transition">KPI Calculation</Link>
               </div>
 
               <div className={getPanelClass('integration-content')}>

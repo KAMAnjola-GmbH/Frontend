@@ -45,7 +45,7 @@ export default function ContactPage() {
       </section>
 
       {/* Main Content */}
-      <main className="flex-grow py-16 md:py-20">
+      <main className="grow py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}

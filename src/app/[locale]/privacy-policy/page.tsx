@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
       </section>
 
       {/* Main Content */}
-      <main className="flex-grow py-16 md:py-20">
+      <main className="grow py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="prose prose-invert max-w-none">
 

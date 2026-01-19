@@ -1,16 +1,35 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import ProductsDropdown from './ProductsDropdown';
 
 export default function NavLinks() {
+  const t = useTranslations('nav');
+
   return (
     <ul className="lg:flex items-center space-x-6 font-semibold text-base text-cyan-300">
       <ProductsDropdown />
-      <li><Link href="/" className="hover:text-white transition" data-i18n-key="solutions">Solutions</Link></li>
-      <li><Link href="/" className="hover:text-white transition" data-i18n-key="workshop">Workshop</Link></li>
-      <li><Link href="/" className="hover:text-white transition" data-i18n-key="workbench">MyWorkbench</Link></li>
-      <li><Link href="/" className="hover:text-white transition" data-i18n-key="learn">Learn</Link></li>
+      <li>
+        <Link href="/" className="hover:text-white transition">
+          {t('solutions')}
+        </Link>
+      </li>
+      <li>
+        <Link href="/" className="hover:text-white transition">
+          {t('workshop')}
+        </Link>
+      </li>
+      <li>
+        <Link href="/" className="hover:text-white transition">
+          {t('workbench')}
+        </Link>
+      </li>
+      <li>
+        <Link href="/" className="hover:text-white transition">
+          {t('learn')}
+        </Link>
+      </li>
     </ul>
   );
 }
