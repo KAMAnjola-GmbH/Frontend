@@ -101,7 +101,6 @@ export const apiClient = {
             : undefined,
       });
     } catch (error) {
-      clearTimeout(timeoutId);
       if (error instanceof Error && error.name === 'AbortError') {
         throw new ApiError(408, 'Request Timeout', { message: `Request timed out after ${timeout}ms` });
       }
@@ -208,7 +207,6 @@ export const apiClient = {
     try {
       response = await fetch(url, { signal: controller.signal });
     } catch (error) {
-      clearTimeout(timeoutId);
       if (error instanceof Error && error.name === 'AbortError') {
         throw new ApiError(408, 'Request Timeout', { message: `Download timed out after ${timeout}ms` });
       }

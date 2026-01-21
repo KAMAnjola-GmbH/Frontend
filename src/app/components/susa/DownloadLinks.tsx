@@ -54,13 +54,16 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
             }
 
             const blob = await response.blob();
-            const tempLink = document.createElement('a');
-            tempLink.href = URL.createObjectURL(blob);
-            tempLink.setAttribute('download', fileName);
-            document.body.appendChild(tempLink);
-            tempLink.click();
-            document.body.removeChild(tempLink);
-            URL.revokeObjectURL(tempLink.href);
+            const url = URL.createObjectURL(blob);
+
+            // Create link and trigger download without DOM manipulation
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.click();
+
+            // Cleanup blob URL to prevent memory leak
+            URL.revokeObjectURL(url);
             onDownloadComplete(fileName);
 
         } catch (error: unknown) {

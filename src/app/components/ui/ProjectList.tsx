@@ -3,10 +3,9 @@
 
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { SusaProject, ProjectStatus } from '@/types/susa'; // <<<<<<< UPDATED TYPE IMPORT
+import { SusaProject, ProjectStatus } from '@/types/susa';
 import DeleteModal from './modals/DeleteModal';
 import RenameModal from './modals/RenameModal';
-//import { viewerControls } from '@/lib/utils/viewer';
 
 interface ProjectListProps {
     projects: SusaProject[];
@@ -68,9 +67,8 @@ const ProjectList: React.FC<ProjectListProps> = ({
         if (!menuState) return;
 
         if (action === 'analyze') {
-            selectProject(menuState.projectId); // Use selectProject to handle the flow (mapping or fetching results)
-            //viewerControls.clearScene(); // Clear scene if a new analysis starts
-            setMenuState(null); // Only close menu for analyze action
+            selectProject(menuState.projectId);
+            setMenuState(null);
         } else if (action === 'delete') {
             setIsDeleteModalOpen(true);
             // Keep menuState so modal has access to projectId/projectName
