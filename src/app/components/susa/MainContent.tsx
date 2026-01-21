@@ -48,7 +48,7 @@ const MainContent: React.FC<MainContentProps> = ({
     ) {
       const message = isFetchingResults
         ? t('loading_results')
-        : t('job_status', { id: currentProjectId, status: currentProjectStatus });
+        : t('job_status', { id: currentProjectId, status: currentProjectStatus ?? 'Unknown' });
       return (
         <div className="flex-grow bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg flex flex-col items-center justify-center text-gray-400 text-lg p-6">
           <svg

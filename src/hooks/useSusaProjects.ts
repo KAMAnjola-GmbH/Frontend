@@ -65,8 +65,11 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
 
   // Refs for SignalR callback and race condition prevention
   const currentProjectIdRef = useRef<number | null>(null);
-  const processedSignalsRef = useRef<Record<number, string>>({});
+  const processedSignalsRef = useRef<Map<number, string>>(new Map());
   const requestIdRef = useRef(0); // Incremented for each async operation
+
+  /** Max number of processed signals to keep in memory */
+  const MAX_PROCESSED_SIGNALS = 100;
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -207,11 +210,19 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
   // ============================
   const saveMappingsAndRunAnalysis = useCallback(
     async (uploadId: number, mappings: Record<string, string>): Promise<boolean> => {
+      // Generate unique request ID for race condition prevention
+      const thisRequestId = ++requestIdRef.current;
+
       setMappingData(null);
       addNotification('Queuing analysis job...', 'info');
 
       try {
         const result = await susaApi.analyze(uploadId, mappings);
+
+        // Check if this request is still the latest one
+        if (thisRequestId !== requestIdRef.current) {
+          return false; // A newer request superseded this one
+        }
 
         // Check if job was queued (has jobId) or returned cached result
         if ('jobId' in result) {
@@ -225,10 +236,13 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
         fetchProjects();
         return true;
       } catch (error) {
-        const message = getErrorMessage(error, 'Failed to queue job');
-        console.error('[useSusaProjects] saveMappingsAndRunAnalysis:', message);
-        addNotification(message, 'error');
-        fetchProjects();
+        // Only show error if this is still the active request
+        if (thisRequestId === requestIdRef.current) {
+          const message = getErrorMessage(error, 'Failed to queue job');
+          console.error('[useSusaProjects] saveMappingsAndRunAnalysis:', message);
+          addNotification(message, 'error');
+          fetchProjects();
+        }
         return false;
       }
     },
@@ -324,14 +338,24 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
       const incomingStatus = data.status;
 
       // Idempotency check - prevent duplicate processing
-      const lastStatus = processedSignalsRef.current[data.jobId];
+      const lastStatus = processedSignalsRef.current.get(data.jobId);
       if (lastStatus === incomingStatus) {
-        console.log(`[SignalR] Duplicate ignored: Job ${data.jobId} already "${incomingStatus}"`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[SignalR] Duplicate ignored: Job ${data.jobId} already "${incomingStatus}"`);
+        }
         return;
       }
 
-      // Mark status as processed
-      processedSignalsRef.current[data.jobId] = incomingStatus;
+      // Mark status as processed with size limit to prevent memory leak
+      processedSignalsRef.current.set(data.jobId, incomingStatus);
+
+      // Evict oldest entries if over limit
+      if (processedSignalsRef.current.size > MAX_PROCESSED_SIGNALS) {
+        const firstKey = processedSignalsRef.current.keys().next().value;
+        if (firstKey !== undefined) {
+          processedSignalsRef.current.delete(firstKey);
+        }
+      }
 
       // Refresh project list
       fetchProjects();
@@ -340,12 +364,14 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
 
       if (data.jobId === activeId) {
         setCurrentProjectStatus(incomingStatus);
-        console.log(`[SignalR] Update: Job ${data.jobId}, Status: "${incomingStatus}"`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[SignalR] Update: Job ${data.jobId}, Status: "${incomingStatus}"`);
+        }
 
         if (incomingStatus === 'Completed') {
           addNotification(`Analysis for project ${data.jobId} completed! Loading results...`, 'success');
           fetchAnalysisResults(data.jobId);
-        } else if (typeof incomingStatus === 'string' && incomingStatus.startsWith('Failed')) {
+        } else if (incomingStatus.startsWith('Failed')) {
           addNotification(`Analysis for project ${data.jobId} failed.`, 'error');
         } else if (incomingStatus === 'Processing') {
           addNotification(`Project ${data.jobId} analysis is now running.`, 'info');
