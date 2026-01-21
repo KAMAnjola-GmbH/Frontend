@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { SusaProject, ProjectStatus } from '@/types/susa'; // <<<<<<< UPDATED TYPE IMPORT
 import DeleteModal from './modals/DeleteModal';
 import RenameModal from './modals/RenameModal';
@@ -36,6 +37,8 @@ const ProjectList: React.FC<ProjectListProps> = ({
     deleteProject,
     renameProject,
 }) => {
+    const t = useTranslations('susa');
+
     // State to manage context menu visibility and position
     const [menuState, setMenuState] = useState<{
         isOpen: boolean;
@@ -123,24 +126,24 @@ const ProjectList: React.FC<ProjectListProps> = ({
 
     const getAnalyzeButtonText = (status: ProjectStatus) => {
         switch (status) {
-            case 'Completed': return 'View Report';
-            case 'Ready for Mapping': return 'Start Mapping/Analysis';
-            case 'Mapping in Progress': return 'Continue Mapping';
-            case 'Processing': return 'View Status';
-            default: return 'Analyze';
+            case 'Completed': return t('view_report');
+            case 'Ready for Mapping': return t('start_mapping');
+            case 'Mapping in Progress': return t('continue_mapping');
+            case 'Processing': return t('view_status');
+            default: return t('analyze');
         }
     }
 
 
     if (isLoading) {
-        return <li className="p-3 bg-gray-900/50 rounded-md text-center text-gray-400">Loading projects...</li>;
+        return <li className="p-3 bg-gray-900/50 rounded-md text-center text-gray-400">{t('loading_projects')}</li>;
     }
 
     return (
         <>
             <ul id="project-list" className="space-y-2">
                 {projects.length === 0 ? (
-                    <li className="p-3 bg-gray-900/50 rounded-md text-center text-gray-400">No projects found.</li>
+                    <li className="p-3 bg-gray-900/50 rounded-md text-center text-gray-400">{t('no_projects')}</li>
                 ) : (
                     projects.map(project => (
                         <li 
@@ -162,7 +165,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
                                 onClick={(e) => openContextMenu(e, project)}
                                 data-project-id={project.id}
                                 className={`p-1 rounded-full text-gray-400 hover:bg-gray-600 transition ${currentProjectId === project.id ? 'text-white' : ''}`}
-                                title="Project Actions"
+                                title={t('project_actions')}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
                             </button>
@@ -182,11 +185,11 @@ const ProjectList: React.FC<ProjectListProps> = ({
                     </button>
                     <button onClick={() => handleMenuAction('rename')} className="w-full text-left px-3 py-2 text-sm text-gray-200 hover:bg-indigo-600 transition flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                        Rename
+                        {t('rename')}
                     </button>
                     <button onClick={() => handleMenuAction('delete')} className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-red-600 hover:text-white transition flex items-center gap-2 border-t border-gray-600 mt-1 pt-1">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        Delete
+                        {t('delete')}
                     </button>
                 </div>
             )}

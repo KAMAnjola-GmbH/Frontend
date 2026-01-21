@@ -19,7 +19,9 @@
   },
   "home": {
     "hero_title": "Visualize, Simulate, and Optimize",
-    "hero_description": "Our platform brings your physical assets into the digital world, enabling real-time monitoring, predictive simulations, and data-driven optimization."
+    "hero_description": "Our platform brings your physical assets into the digital world, enabling real-time monitoring, predictive simulations, and data-driven optimization.",
+    "sections_coming_soon": "More Sections Coming Soon",
+    "sections_description": "Features, solutions, and documentation will be detailed here."
   },
   "cookie": {
     "title": "Cookie Settings",
@@ -145,6 +147,12 @@
     "edit": "Edit",
     "confirm": "Confirm"
   },
+  "modals": {
+    "delete_project": "Delete Project",
+    "delete_confirm": "Are you sure you want to delete this project? This action cannot be undone.",
+    "rename_project": "Rename Project",
+    "new_project_name": "New Project Name"
+  },
   "language": {
     "en": "English",
     "de": "Deutsch"
@@ -182,6 +190,19 @@
     "no_unmapped": "No unmapped accounts found. Ready for full analysis.",
     "saving": "Saving...",
     "save_and_run": "Save & Run Analysis",
-    "save_error": "Failed to save mappings. Please try again."
+    "save_error": "Failed to save mappings. Please try again.",
+    "analysis_title": "Analysis & Visualization",
+    "results_for": "Results for: {title}",
+    "no_kpi_data": "No detailed KPI data available for this report.",
+    "cost_structure_company": "Cost Structure (Company Total)",
+    "financial_overview_company": "Financial Overview (Company Total)",
+    "cost_structure_category": "Cost Structure by Category",
+    "export_pdf": "Export PDF",
+    "export_excel": "Export Excel",
+    "export_csv": "Export CSV",
+    "downloading": "Downloading...",
+    "download_initiated": "Initiating download for {fileName}...",
+    "download_complete": "Download of {fileName} complete!",
+    "download_failed": "Download failed"
   }
 }

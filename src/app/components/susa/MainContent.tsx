@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 import { AnalysisResult, PreAnalysisResult, ProjectStatus } from '@/types/susa';
 import MappingUI from './MappingInterface';
 import AnalysisReport from './AnalysisReport';
@@ -22,6 +23,8 @@ const MainContent: React.FC<MainContentProps> = ({
   isFetchingResults,
   saveMappingsAndRunAnalysis,
 }) => {
+  const t = useTranslations('susa');
+
   const renderContent = () => {
     if (currentProjectId && mappingData) {
       return (
@@ -44,8 +47,8 @@ const MainContent: React.FC<MainContentProps> = ({
         isFetchingResults)
     ) {
       const message = isFetchingResults
-        ? 'Loading analysis results...'
-        : `Job ${currentProjectId} is ${currentProjectStatus}.`;
+        ? t('loading_results')
+        : t('job_status', { id: currentProjectId, status: currentProjectStatus });
       return (
         <div className="flex-grow bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg flex flex-col items-center justify-center text-gray-400 text-lg p-6">
           <svg
@@ -71,7 +74,7 @@ const MainContent: React.FC<MainContentProps> = ({
           <p>{message}</p>
           {!isFetchingResults && (
             <p className="text-sm mt-2">
-              You will be notified when it&apos;s complete.
+              {t('will_notify')}
             </p>
           )}
         </div>
@@ -80,7 +83,7 @@ const MainContent: React.FC<MainContentProps> = ({
 
     return (
       <div className="flex-grow bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg flex items-center justify-center text-gray-400 text-lg">
-        Select a project or upload a new file to start analysis.
+        {t('select_project')}
       </div>
     );
   };

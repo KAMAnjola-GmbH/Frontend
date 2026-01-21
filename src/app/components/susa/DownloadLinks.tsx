@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ResultFiles } from '@/types/susa';
 import { useNotifications } from '@/hooks/useNotifications';
 import { config } from '@/app/config';
@@ -14,13 +15,26 @@ interface DownloadButtonProps {
     s3Key?: string;
     taskId: string;
     label: string;
+    downloadingLabel: string;
     iconSvg: React.ReactNode;
     styleClasses: string;
+    onDownloadStart: (fileName: string) => void;
+    onDownloadComplete: (fileName: string) => void;
+    onDownloadError: (message: string) => void;
 }
 
-const DownloadButton: React.FC<DownloadButtonProps> = ({ s3Key, taskId, label, iconSvg, styleClasses }) => {
+const DownloadButton: React.FC<DownloadButtonProps> = ({
+    s3Key,
+    taskId,
+    label,
+    downloadingLabel,
+    iconSvg,
+    styleClasses,
+    onDownloadStart,
+    onDownloadComplete,
+    onDownloadError
+}) => {
     const [isDownloading, setIsDownloading] = useState(false);
-    const { addNotification } = useNotifications();
 
     if (!s3Key) return null;
 
@@ -29,10 +43,9 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ s3Key, taskId, label, i
 
     const handleDownload = async () => {
         setIsDownloading(true);
-        addNotification(`Initiating download for ${fileName}...`, 'info');
+        onDownloadStart(fileName);
 
         try {
-            // Note: We use the proxy here, which implicitly handles the Auth0 token.
             const response = await fetch(downloadUrl);
 
             if (!response.ok) {
@@ -48,12 +61,12 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ s3Key, taskId, label, i
             tempLink.click();
             document.body.removeChild(tempLink);
             URL.revokeObjectURL(tempLink.href);
-            addNotification(`Download of ${fileName} complete!`, 'success');
+            onDownloadComplete(fileName);
 
         } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : 'Unknown error Dwonloading projects';
+            const message = error instanceof Error ? error.message : 'Unknown error downloading file';
             console.error(message);
-            addNotification(message, 'error');
+            onDownloadError(message);
         } finally {
             setIsDownloading(false);
         }
@@ -70,7 +83,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ s3Key, taskId, label, i
             ) : (
                 iconSvg
             )}
-            <span>{isDownloading ? 'Downloading...' : label}</span>
+            <span>{isDownloading ? downloadingLabel : label}</span>
         </button>
     );
 };
@@ -81,32 +94,58 @@ const sheetIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" vi
 
 
 const DownloadLinks: React.FC<DownloadLinksProps> = ({ resultFiles }) => {
+    const t = useTranslations('susa');
+    const { addNotification } = useNotifications();
     const { taskId, pdfS3Key, excelS3Key, csvS3Key } = resultFiles;
 
     if (!taskId) return null;
+
+    const handleDownloadStart = (fileName: string) => {
+        addNotification(t('download_initiated', { fileName }), 'info');
+    };
+
+    const handleDownloadComplete = (fileName: string) => {
+        addNotification(t('download_complete', { fileName }), 'success');
+    };
+
+    const handleDownloadError = (message: string) => {
+        addNotification(message, 'error');
+    };
 
     return (
         <>
             <DownloadButton
                 s3Key={pdfS3Key}
                 taskId={taskId}
-                label="Export PDF"
+                label={t('export_pdf')}
+                downloadingLabel={t('downloading')}
                 iconSvg={pdfIcon}
                 styleClasses="bg-red-600 hover:bg-red-500 text-white"
+                onDownloadStart={handleDownloadStart}
+                onDownloadComplete={handleDownloadComplete}
+                onDownloadError={handleDownloadError}
             />
             <DownloadButton
                 s3Key={excelS3Key}
                 taskId={taskId}
-                label="Export Excel"
+                label={t('export_excel')}
+                downloadingLabel={t('downloading')}
                 iconSvg={sheetIcon}
                 styleClasses="bg-green-600 hover:bg-green-500 text-white"
+                onDownloadStart={handleDownloadStart}
+                onDownloadComplete={handleDownloadComplete}
+                onDownloadError={handleDownloadError}
             />
             <DownloadButton
                 s3Key={csvS3Key}
                 taskId={taskId}
-                label="Export CSV"
+                label={t('export_csv')}
+                downloadingLabel={t('downloading')}
                 iconSvg={sheetIcon}
                 styleClasses="bg-blue-600 hover:bg-blue-500 text-white"
+                onDownloadStart={handleDownloadStart}
+                onDownloadComplete={handleDownloadComplete}
+                onDownloadError={handleDownloadError}
             />
         </>
     );

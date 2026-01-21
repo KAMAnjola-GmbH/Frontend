@@ -40,8 +40,8 @@ export default function HomePage() {
 
       <section className="py-20 bg-slate-800 z-10">
         <div className="container mx-auto text-center z-20">
-          <h2 className="text-3xl font-bold text-white">More Sections Coming Soon</h2>
-          <p className="text-gray-400 mt-4">Features, solutions, and documentation will be detailed here.</p>
+          <h2 className="text-3xl font-bold text-white">{t('sections_coming_soon')}</h2>
+          <p className="text-gray-400 mt-4">{t('sections_description')}</p>
         </div>
       </section>
 

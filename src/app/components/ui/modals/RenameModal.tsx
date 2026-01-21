@@ -1,5 +1,8 @@
 // components/Modals/RenameModal.tsx
+'use client';
+
 import React, { useState } from "react";
+import { useTranslations } from 'next-intl';
 import BaseModal from "./BaseModal";
 
 interface RenameModalProps {
@@ -15,6 +18,9 @@ const RenameModal: React.FC<RenameModalProps> = ({
     onConfirm,
     currentName
 }) => {
+    const t = useTranslations('modals');
+    const tCommon = useTranslations('common');
+    const tSusa = useTranslations('susa');
 
     const [newName, setNewName] = useState(currentName);
 
@@ -27,14 +33,14 @@ const RenameModal: React.FC<RenameModalProps> = ({
 
     return (
         <BaseModal isOpen={isOpen} onClose={onClose}>
-            <h3 className="text-lg font-semibold text-white mb-5">Rename Project</h3>
+            <h3 className="text-lg font-semibold text-white mb-5">{t('rename_project')}</h3>
 
             <form onSubmit={handleSubmit}>
                 <label
                     htmlFor="new-project-name"
                     className="block mb-2 text-sm font-medium text-gray-300"
                 >
-                    New Project Name
+                    {t('new_project_name')}
                 </label>
 
                 <input
@@ -53,14 +59,14 @@ const RenameModal: React.FC<RenameModalProps> = ({
                         onClick={onClose}
                         className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md transition text-sm font-semibold"
                     >
-                        Cancel
+                        {tCommon('cancel')}
                     </button>
 
                     <button
                         type="submit"
                         className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md transition text-sm"
                     >
-                        Rename
+                        {tSusa('rename')}
                     </button>
                 </div>
             </form>

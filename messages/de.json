@@ -19,7 +19,9 @@
   },
   "home": {
     "hero_title": "Visualisieren, Simulieren und Optimieren",
-    "hero_description": "Unsere Plattform bringt Ihre physischen Assets in die digitale Welt und ermöglicht Echtzeit-Monitoring, prädiktive Simulationen und datengesteuerte Optimierung."
+    "hero_description": "Unsere Plattform bringt Ihre physischen Assets in die digitale Welt und ermöglicht Echtzeit-Monitoring, prädiktive Simulationen und datengesteuerte Optimierung.",
+    "sections_coming_soon": "Weitere Abschnitte folgen",
+    "sections_description": "Funktionen, Lösungen und Dokumentation werden hier detailliert beschrieben."
   },
   "cookie": {
     "title": "Cookie-Einstellungen",
@@ -145,6 +147,12 @@
     "edit": "Bearbeiten",
     "confirm": "Bestätigen"
   },
+  "modals": {
+    "delete_project": "Projekt löschen",
+    "delete_confirm": "Sind Sie sicher, dass Sie dieses Projekt löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "rename_project": "Projekt umbenennen",
+    "new_project_name": "Neuer Projektname"
+  },
   "language": {
     "en": "English",
     "de": "Deutsch"
@@ -182,6 +190,19 @@
     "no_unmapped": "Keine nicht zugeordneten Konten gefunden. Bereit für die vollständige Analyse.",
     "saving": "Wird gespeichert...",
     "save_and_run": "Speichern & Analyse starten",
-    "save_error": "Zuordnungen konnten nicht gespeichert werden. Bitte versuchen Sie es erneut."
+    "save_error": "Zuordnungen konnten nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+    "analysis_title": "Analyse & Visualisierung",
+    "results_for": "Ergebnisse für: {title}",
+    "no_kpi_data": "Keine detaillierten KPI-Daten für diesen Bericht verfügbar.",
+    "cost_structure_company": "Kostenstruktur (Gesamtunternehmen)",
+    "financial_overview_company": "Finanzübersicht (Gesamtunternehmen)",
+    "cost_structure_category": "Kostenstruktur nach Kategorie",
+    "export_pdf": "PDF exportieren",
+    "export_excel": "Excel exportieren",
+    "export_csv": "CSV exportieren",
+    "downloading": "Wird heruntergeladen...",
+    "download_initiated": "Download für {fileName} wird gestartet...",
+    "download_complete": "Download von {fileName} abgeschlossen!",
+    "download_failed": "Download fehlgeschlagen"
   }
 }

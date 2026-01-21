@@ -1,5 +1,8 @@
 // components/Modals/DeleteModal.tsx
+'use client';
+
 import React from "react";
+import { useTranslations } from 'next-intl';
 import BaseModal from "./BaseModal";
 
 interface DeleteModalProps {
@@ -13,12 +16,15 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     onClose,
     onConfirm
 }) => {
+    const t = useTranslations('modals');
+    const tCommon = useTranslations('common');
+
     return (
         <BaseModal isOpen={isOpen} onClose={onClose}>
-            <h3 className="text-lg font-semibold text-white mb-4">Delete Project</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">{t('delete_project')}</h3>
 
             <p className="text-gray-400 mb-6">
-                Are you sure you want to delete this project? This action cannot be undone.
+                {t('delete_confirm')}
             </p>
 
             <div className="flex justify-end gap-3">
@@ -27,7 +33,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                     onClick={onClose}
                     className="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md transition text-sm font-semibold"
                 >
-                    Cancel
+                    {tCommon('cancel')}
                 </button>
 
                 <button
@@ -35,7 +41,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                     onClick={onConfirm}
                     className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-md transition text-sm"
                 >
-                    Delete
+                    {tCommon('delete')}
                 </button>
             </div>
         </BaseModal>

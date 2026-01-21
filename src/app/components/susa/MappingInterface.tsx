@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { PreAnalysisResult } from '@/types/susa';
 
 interface MappingUIProps {
@@ -10,6 +11,7 @@ interface MappingUIProps {
 }
 
 const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
+  const t = useTranslations('susa');
   const { unmappedAccounts: rawAccounts, availableCategories } = data;
 
   // Normalize accounts - handle both uppercase (Konto/Bezeichnung) and lowercase (konto/bezeichnung)
@@ -57,7 +59,7 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
 
     const success = await onSave(uploadId, customMappings);
     if (!success) {
-      setSaveError('Failed to save mappings. Please try again.');
+      setSaveError(t('save_error'));
     }
     setIsSaving(false);
   };
@@ -65,24 +67,24 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
   return (
     <div className="flex flex-col grow bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 h-full">
       <h3 className="text-xl font-bold mb-2 text-white">
-        Account Mapping (Step 2/3)
+        {t('mapping_title')}
       </h3>
       <p className="text-gray-400 mb-6">
-        Please assign a category to each of the unmapped accounts below.
+        {t('mapping_description')}
       </p>
 
       {showWarning && (
         <div className="mb-4 p-3 bg-yellow-500/20 text-yellow-300 rounded-md text-sm border border-yellow-500/50">
-          <p className="font-semibold">Warning:</p>
+          <p className="font-semibold">{t('warning')}</p>
           <p>
-            Some accounts are not mapped. They will be excluded from the analysis. Click &apos;Save & Run Analysis&apos; again to confirm.
+            {t('unmapped_warning')}
           </p>
         </div>
       )}
 
       {saveError && (
         <div className="mb-4 p-3 bg-red-500/20 text-red-300 rounded-md text-sm border border-red-500/50">
-          <p className="font-semibold">Error:</p>
+          <p className="font-semibold">{t('error')}</p>
           <p>{saveError}</p>
         </div>
       )}
@@ -107,7 +109,7 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
                 onChange={e => handleSelectChange(account.konto, e.target.value)}
                 className="bg-gray-800 border border-gray-600 rounded-md p-1.5 text-sm text-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[150px]"
               >
-                <option value="">-- Please Select --</option>
+                <option value="">{t('select_category')}</option>
                 {availableCategories.map(cat => (
                   <option key={cat} value={cat}>
                     {cat}
@@ -118,7 +120,7 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
           ))
         ) : (
           <p className="text-center p-4 text-gray-400">
-            No unmapped accounts found. Ready for full analysis.
+            {t('no_unmapped')}
           </p>
         )}
       </ul>
@@ -130,7 +132,7 @@ const MappingUI: React.FC<MappingUIProps> = ({ uploadId, data, onSave }) => {
           disabled={isSaving}
           className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded transition duration-200 disabled:bg-gray-500"
         >
-          {isSaving ? 'Saving...' : 'Save & Run Analysis'}
+          {isSaving ? t('saving') : t('save_and_run')}
         </button>
       </div>
     </div>
