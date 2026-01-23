@@ -32,6 +32,17 @@ const KostenstrukturChart: React.FC<KostenstrukturChartProps> = ({ kpiData }) =>
     const chartRef = useRef<HTMLCanvasElement>(null);
     const chartInstance = useRef<Chart<'doughnut'> | null>(null);
 
+    // Cleanup on unmount only - separate from data update effect
+    useEffect(() => {
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+                chartInstance.current = null;
+            }
+        };
+    }, []);
+
+    // Create or update chart when data changes
     useEffect(() => {
         if (!chartRef.current) return;
 
@@ -71,18 +82,10 @@ const KostenstrukturChart: React.FC<KostenstrukturChartProps> = ({ kpiData }) =>
             }]
         };
 
-        chartInstance.current = new Chart(chartRef.current, {
+        chartInstance.current = new Chart<'doughnut'>(chartRef.current, {
             ...CHART_CONFIG,
             data
         });
-
-        // Cleanup on unmount only
-        return () => {
-            if (chartInstance.current) {
-                chartInstance.current.destroy();
-                chartInstance.current = null;
-            }
-        };
     }, [kpiData]);
 
     return <canvas ref={chartRef} id="kostenstrukturChart"></canvas>;

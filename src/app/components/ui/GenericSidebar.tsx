@@ -1,7 +1,7 @@
 // components/Dashboard/GenericSidebar.tsx
 'use client';
 
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useRef } from 'react';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 
@@ -11,7 +11,7 @@ interface GenericSidebarProps {
   uploadLabel?: string;
   acceptedFileTypes?: string;
   onUpload?: (file: File) => Promise<boolean | void>;
-  children: ReactNode; // This allows you to inject ProjectList or any other list
+  children: ReactNode;
 }
 
 const GenericSidebar: React.FC<GenericSidebarProps> = ({
@@ -24,7 +24,10 @@ const GenericSidebar: React.FC<GenericSidebarProps> = ({
 }) => {
   const t = useTranslations('susa');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [fileInputKey, setFileInputKey] = useState(() => Date.now());
+
+  // Use counter instead of Date.now() to guarantee unique keys
+  const fileInputKeyRef = useRef(0);
+  const [fileInputKey, setFileInputKey] = useState(0);
 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +46,7 @@ const GenericSidebar: React.FC<GenericSidebarProps> = ({
       // Only clear if the parent returns true or undefined (void)
       if (success !== false) {
         setSelectedFile(null);
-        setFileInputKey(Date.now());
+        setFileInputKey(++fileInputKeyRef.current);
       }
     }
   };

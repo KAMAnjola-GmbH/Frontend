@@ -12,11 +12,11 @@ const SusaProductPage: React.FC = () => {
         currentAnalysis,
         mappingData,
         isFetchingResults,
+        isFetchingMapping,
         saveMappingsAndRunAnalysis
     } = useSusaContext();
 
     return (
-
         <div className="flex w-full h-full">
             <video autoPlay loop muted playsInline id="bg-video">
                 <source src="/R0sitavideobg.mp4" type="video/mp4" />
@@ -27,6 +27,7 @@ const SusaProductPage: React.FC = () => {
                 currentAnalysis={currentAnalysis}
                 mappingData={mappingData}
                 isFetchingResults={isFetchingResults}
+                isFetchingMapping={isFetchingMapping}
                 saveMappingsAndRunAnalysis={saveMappingsAndRunAnalysis}
             />
         </div>

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { SusaProject, ProjectStatus } from '@/types/susa';
 import DeleteModal from './modals/DeleteModal';
 import RenameModal from './modals/RenameModal';
+import { ProjectListSkeleton } from './Skeleton';
 
 interface ProjectListProps {
     projects: SusaProject[];
@@ -134,7 +135,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
 
 
     if (isLoading) {
-        return <li className="p-3 bg-gray-900/50 rounded-md text-center text-gray-400">{t('loading_projects')}</li>;
+        return <ProjectListSkeleton count={4} />;
     }
 
     return (

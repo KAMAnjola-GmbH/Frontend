@@ -36,6 +36,17 @@ const FinanzUebersichtChart: React.FC<FinanzUebersichtChartProps> = ({ kpiData }
     const chartRef = useRef<HTMLCanvasElement>(null);
     const chartInstance = useRef<Chart<'bar'> | null>(null);
 
+    // Cleanup on unmount only - separate from data update effect
+    useEffect(() => {
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+                chartInstance.current = null;
+            }
+        };
+    }, []);
+
+    // Create or update chart when data changes
     useEffect(() => {
         if (!chartRef.current) return;
 
@@ -72,18 +83,10 @@ const FinanzUebersichtChart: React.FC<FinanzUebersichtChartProps> = ({ kpiData }
             }]
         };
 
-        chartInstance.current = new Chart(chartRef.current, {
+        chartInstance.current = new Chart<'bar'>(chartRef.current, {
             ...CHART_CONFIG,
             data
         });
-
-        // Cleanup on unmount only
-        return () => {
-            if (chartInstance.current) {
-                chartInstance.current.destroy();
-                chartInstance.current = null;
-            }
-        };
     }, [kpiData]);
 
     return <canvas ref={chartRef} id="finanzUebersichtChart"></canvas>;

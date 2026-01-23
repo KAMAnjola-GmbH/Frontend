@@ -27,6 +27,7 @@ interface UseSusaProjectsReturn {
   currentAnalysis: AnalysisResult | null;
   mappingData: PreAnalysisResult | null;
   isFetchingResults: boolean;
+  isFetchingMapping: boolean;
   selectProject: (id: number) => Promise<void>;
   uploadFile: (file: File) => Promise<boolean>;
   deleteProject: (id: number) => Promise<void>;
@@ -59,6 +60,7 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
   const [currentAnalysis, setCurrentAnalysis] = useState<AnalysisResult | null>(null);
   const [mappingData, setMappingData] = useState<PreAnalysisResult | null>(null);
   const [isFetchingResults, setIsFetchingResults] = useState(false);
+  const [isFetchingMapping, setIsFetchingMapping] = useState(false);
 
   // Hooks
   const { addNotification } = useNotifications();
@@ -179,7 +181,7 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
 
       setCurrentAnalysis(null);
       setMappingData(null);
-      addNotification('Initiating pre-analysis...', 'info');
+      setIsFetchingMapping(true);
 
       try {
         const result = await susaApi.preAnalyze(uploadId);
@@ -200,6 +202,10 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
           fetchProjects();
         }
         return false;
+      } finally {
+        if (thisRequestId === requestIdRef.current) {
+          setIsFetchingMapping(false);
+        }
       }
     },
     [addNotification, fetchProjects]
@@ -399,6 +405,7 @@ export const useSusaProjects = (): UseSusaProjectsReturn => {
     currentAnalysis,
     mappingData,
     isFetchingResults,
+    isFetchingMapping,
     selectProject,
     uploadFile,
     deleteProject,

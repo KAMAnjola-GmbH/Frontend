@@ -139,6 +139,9 @@
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
+    "error_title": "Something went wrong",
+    "error_description": "An unexpected error occurred. Please try reloading the page.",
+    "reload_page": "Reload Page",
     "back": "Back",
     "close": "Close",
     "save": "Save",
@@ -204,5 +207,28 @@
     "download_initiated": "Initiating download for {fileName}...",
     "download_complete": "Download of {fileName} complete!",
     "download_failed": "Download failed"
+  },
+  "viewer": {
+    "title": "3D Model Viewer",
+    "home": "Home",
+    "items": "Models",
+    "upload_label": "Upload 3D Model",
+    "upload": "Upload",
+    "no_projects": "No models found.",
+    "project_actions": "Model Actions",
+    "view_model": "View Model",
+    "loading_model": "Loading 3D model...",
+    "select_project": "Select a model or upload a new GLB/GLTF file to view.",
+    "project_id": "Project ID",
+    "no_model": "Model data not available.",
+    "reset_camera": "Reset Camera",
+    "run_simulation": "Run Stress Simulation",
+    "simulating": "Simulating...",
+    "simulation_results": "Stress Simulation Results",
+    "running_simulation": "Running stress simulation...",
+    "simulation_type": "Type",
+    "max_stress": "Max Stress",
+    "min_stress": "Min Stress",
+    "avg_stress": "Average Stress"
   }
 }

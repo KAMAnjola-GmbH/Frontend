@@ -60,6 +60,8 @@ export const useSignalR = (
   const connectionRef = useRef<signalR.HubConnection | null>(null);
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryCountRef = useRef(0);
+  const connectFnRef = useRef<(() => Promise<void>) | null>(null);
+  const isCancelledRef = useRef(false);
 
   // Update callback refs when they change
   useEffect(() => {
@@ -79,7 +81,7 @@ export const useSignalR = (
     // Prevent multiple connections
     if (connectionRef.current) return;
 
-    let isCancelled = false;
+    isCancelledRef.current = false;
 
     const connect = async () => {
       // Clear any pending retry
@@ -91,13 +93,13 @@ export const useSignalR = (
       notifyStatus('connecting');
       const token = await fetchAccessToken();
 
-      if (isCancelled) return;
+      if (isCancelledRef.current) return;
 
       if (!token) {
         // Check if we've exceeded max retries
         if (retryCountRef.current >= MAX_TOKEN_RETRIES) {
           if (process.env.NODE_ENV === 'development') {
-            console.warn('[SignalR] Max token fetch retries exceeded, stopping reconnection attempts');
+            console.warn('[SignalR] Max token fetch retries exceeded, will retry on page visibility change');
           }
           notifyStatus('disconnected');
           return;
@@ -111,7 +113,7 @@ export const useSignalR = (
         retryCountRef.current++;
 
         retryTimeoutRef.current = setTimeout(() => {
-          if (!isCancelled) {
+          if (!isCancelledRef.current) {
             connect();
           }
         }, delay);
@@ -150,7 +152,7 @@ export const useSignalR = (
 
       try {
         await connection.start();
-        if (!isCancelled) {
+        if (!isCancelledRef.current) {
           connectionRef.current = connection;
           setIsConnected(true);
           notifyStatus('connected');
@@ -166,11 +168,14 @@ export const useSignalR = (
       }
     };
 
+    // Store connect function for visibility change handler
+    connectFnRef.current = connect;
+
     connect();
 
     // Cleanup function
     return () => {
-      isCancelled = true;
+      isCancelledRef.current = true;
 
       // Clear pending retry timeout
       if (retryTimeoutRef.current) {
@@ -185,6 +190,20 @@ export const useSignalR = (
       }
     };
   }, [notifyStatus]); // notifyStatus is stable via useCallback with empty deps
+
+  // Retry connection when page becomes visible (handles case where user logs in after max retries)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && !connectionRef.current && !isCancelledRef.current) {
+        // Reset retry counter and attempt reconnection
+        retryCountRef.current = 0;
+        connectFnRef.current?.();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   return { isConnected };
 };

@@ -18,8 +18,8 @@ export { apiClient, ApiError } from './client';
 
 // Microservice APIs
 export { susaApi } from './susa';
+export { projectsApi } from './projects';
 
 // Future microservices will be added here:
-// export { projectsApi } from './projects';
 // export { simulationsApi } from './simulations';
 // export { adminApi } from './admin';

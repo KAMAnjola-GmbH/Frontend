@@ -43,17 +43,24 @@ const CHART_COLORS = [
 
 const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = ({ kpiData }) => {
     const chartRef = useRef<HTMLCanvasElement>(null);
-    const chartInstance = useRef<Chart | null>(null);
+    const chartInstance = useRef<Chart<'doughnut'> | null>(null);
 
+    // Cleanup on unmount only - separate from data update effect
+    useEffect(() => {
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+                chartInstance.current = null;
+            }
+        };
+    }, []);
+
+    // Create or update chart when data changes
     useEffect(() => {
         if (!chartRef.current) return;
 
         const gesamtData = kpiData.find(d => d.Gruppe === 'Gesamtunternehmen');
         if (!gesamtData) return;
-
-        if (chartInstance.current) {
-            chartInstance.current.destroy();
-        }
 
         // Merge base data with AdditionalData for category lookups
         const additionalData = gesamtData.AdditionalData ?? {};
@@ -82,7 +89,16 @@ const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = 
             chartColors.push("#10B981");
         }
 
+        // Update existing chart - labels and data may change dynamically
+        if (chartInstance.current) {
+            chartInstance.current.data.labels = chartLabels;
+            chartInstance.current.data.datasets[0].data = chartData;
+            chartInstance.current.data.datasets[0].backgroundColor = chartColors.slice(0, chartData.length);
+            chartInstance.current.update('none');
+            return;
+        }
 
+        // Create new chart only on first render
         const data: ChartConfiguration<'doughnut'>['data'] = {
             labels: chartLabels,
             datasets: [{
@@ -93,7 +109,7 @@ const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = 
             }]
         };
 
-        chartInstance.current = new Chart(chartRef.current, {
+        chartInstance.current = new Chart<'doughnut'>(chartRef.current, {
             type: 'doughnut',
             data: data,
             options: {
@@ -109,14 +125,6 @@ const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = 
                 }
             }
         });
-
-        // Cleanup function
-        return () => {
-            if (chartInstance.current) {
-                chartInstance.current.destroy();
-                chartInstance.current = null;
-            }
-        };
     }, [kpiData]);
 
     return <canvas ref={chartRef} id="kostenstrukturChartCategory"></canvas>;

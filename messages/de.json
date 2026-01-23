@@ -19,7 +19,7 @@
   },
   "home": {
     "hero_title": "Visualisieren, Simulieren und Optimieren",
-    "hero_description": "Unsere Plattform bringt Ihre physischen Assets in die digitale Welt und ermöglicht Echtzeit-Monitoring, prädiktive Simulationen und datengesteuerte Optimierung.",
+    "hero_description": "Unsere Plattform bringt Ihre physischen Anlagen in die digitale Welt und ermöglicht Echtzeitüberwachung, vorausschauende KI-Analysen und fortschrittliche Simulationen für Wirtschaflichkeit Ihrer Geschäftsprozessen.",
     "sections_coming_soon": "Weitere Abschnitte folgen",
     "sections_description": "Funktionen, Lösungen und Dokumentation werden hier detailliert beschrieben."
   },
@@ -139,6 +139,9 @@
   "common": {
     "loading": "Laden...",
     "error": "Ein Fehler ist aufgetreten",
+    "error_title": "Etwas ist schiefgelaufen",
+    "error_description": "Ein unerwarteter Fehler ist aufgetreten. Bitte laden Sie die Seite neu.",
+    "reload_page": "Seite neu laden",
     "back": "Zurück",
     "close": "Schließen",
     "save": "Speichern",
@@ -204,5 +207,28 @@
     "download_initiated": "Download für {fileName} wird gestartet...",
     "download_complete": "Download von {fileName} abgeschlossen!",
     "download_failed": "Download fehlgeschlagen"
+  },
+  "viewer": {
+    "title": "3D Modell Viewer",
+    "home": "Startseite",
+    "items": "Modelle",
+    "upload_label": "3D Modell hochladen",
+    "upload": "Hochladen",
+    "no_projects": "Keine Modelle gefunden.",
+    "project_actions": "Modellaktionen",
+    "view_model": "Modell anzeigen",
+    "loading_model": "3D Modell wird geladen...",
+    "select_project": "Wählen Sie ein Modell oder laden Sie eine neue GLB/GLTF-Datei hoch.",
+    "project_id": "Projekt-ID",
+    "no_model": "Modelldaten nicht verfügbar.",
+    "reset_camera": "Kamera zurücksetzen",
+    "run_simulation": "Stresssimulation starten",
+    "simulating": "Simuliere...",
+    "simulation_results": "Stresssimulations-Ergebnisse",
+    "running_simulation": "Stresssimulation läuft...",
+    "simulation_type": "Typ",
+    "max_stress": "Max. Spannung",
+    "min_stress": "Min. Spannung",
+    "avg_stress": "Durchschn. Spannung"
   }
 }
