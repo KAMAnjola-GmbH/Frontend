@@ -230,5 +230,50 @@
     "max_stress": "Max. Spannung",
     "min_stress": "Min. Spannung",
     "avg_stress": "Durchschn. Spannung"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Willkommen zurück, {name}",
+    "subtitle": "Ihre Geschäftsübersicht auf einen Blick",
+    "error": {
+      "title": "Dashboard konnte nicht geladen werden",
+      "retry": "Erneut versuchen"
+    },
+    "kpis": {
+      "title": "Geschäfts-KPIs",
+      "projects": "Projekte",
+      "analyses": "Abgeschlossene Analysen",
+      "simulations": "Simulationsläufe",
+      "alerts": "Aktive Alerts",
+      "thisWeek": "diese Woche",
+      "total": "Gesamt"
+    },
+    "products": {
+      "title": "Ihre Produkte",
+      "open": "Öffnen",
+      "comingSoon": "Demnächst",
+      "learnMore": "Mehr erfahren",
+      "items": "Elemente"
+    },
+    "activity": {
+      "title": "Letzte Aktivität",
+      "viewAll": "Alle anzeigen",
+      "empty": "Keine Aktivität. Starten Sie mit einem neuen Projekt!"
+    },
+    "subscription": {
+      "title": "Konto & Abonnement",
+      "plan": "Plan",
+      "validUntil": "Gültig bis",
+      "projectsUsed": "Projekte verwendet",
+      "storageUsed": "Speicher verwendet",
+      "manage": "Konto verwalten",
+      "upgrade": "Plan upgraden"
+    },
+    "quickActions": {
+      "title": "Schnellzugriff",
+      "newAnalysis": "Neue Analyse",
+      "uploadModel": "3D Modell hochladen",
+      "documentation": "Dokumentation"
+    }
   }
 }

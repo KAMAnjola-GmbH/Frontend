@@ -21,7 +21,7 @@ export default function NavLinks() {
         </Link>
       </li>
       <li>
-        <Link href="/" className="hover:text-white transition">
+        <Link href="/dashboard" className="hover:text-white transition">
           {t('workbench')}
         </Link>
       </li>

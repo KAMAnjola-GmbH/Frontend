@@ -230,5 +230,50 @@
     "max_stress": "Max Stress",
     "min_stress": "Min Stress",
     "avg_stress": "Average Stress"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back, {name}",
+    "subtitle": "Your business overview at a glance",
+    "error": {
+      "title": "Failed to load dashboard",
+      "retry": "Try Again"
+    },
+    "kpis": {
+      "title": "Business KPIs",
+      "projects": "Projects",
+      "analyses": "Completed Analyses",
+      "simulations": "Simulation Runs",
+      "alerts": "Active Alerts",
+      "thisWeek": "this week",
+      "total": "Total"
+    },
+    "products": {
+      "title": "Your Products",
+      "open": "Open",
+      "comingSoon": "Coming Soon",
+      "learnMore": "Learn More",
+      "items": "items"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "viewAll": "View All",
+      "empty": "No activity yet. Start with a new project!"
+    },
+    "subscription": {
+      "title": "Account & Subscription",
+      "plan": "Plan",
+      "validUntil": "Valid Until",
+      "projectsUsed": "Projects Used",
+      "storageUsed": "Storage Used",
+      "manage": "Manage Account",
+      "upgrade": "Upgrade Plan"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "newAnalysis": "New Analysis",
+      "uploadModel": "Upload 3D Model",
+      "documentation": "Documentation"
+    }
   }
 }
