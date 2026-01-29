@@ -2,20 +2,19 @@
 'use client';
 
 import React, { useState } from 'react';
-import { SusaProject, ProjectStatus } from '@/types/susa'; // <<<<<<< UPDATED TYPE IMPORT
+import { useTranslations } from 'next-intl';
+import { SusaProject, ProjectStatus } from '@/types/susa';
 import DeleteModal from './modals/DeleteModal';
 import RenameModal from './modals/RenameModal';
-//import { viewerControls } from '@/lib/utils/viewer';
+import { ProjectListSkeleton } from './Skeleton';
 
 interface ProjectListProps {
-    projects: SusaProject[]; // SusaProject has ID as number
+    projects: SusaProject[];
     isLoading: boolean;
-    currentProjectId: number | null; // ID is number
-    currentProjectStatus: ProjectStatus | null; // Added status
+    currentProjectId: number | null;
     selectProject: (id: number) => void;
     deleteProject: (id: number) => void;
     renameProject: (id: number, newName: string) => Promise<boolean>;
-    runSimulation: (id: number) => Promise<boolean | void>; // Mapped to fetchAnalysisResults
 }
 
 const getStatusColorClass = (status: ProjectStatus) => {
@@ -34,12 +33,12 @@ const ProjectList: React.FC<ProjectListProps> = ({
     projects,
     isLoading,
     currentProjectId,
-    currentProjectStatus,
     selectProject,
     deleteProject,
     renameProject,
-    runSimulation,
 }) => {
+    const t = useTranslations('susa');
+
     // State to manage context menu visibility and position
     const [menuState, setMenuState] = useState<{
         isOpen: boolean;
@@ -69,34 +68,41 @@ const ProjectList: React.FC<ProjectListProps> = ({
         if (!menuState) return;
 
         if (action === 'analyze') {
-            selectProject(menuState.projectId); // Use selectProject to handle the flow (mapping or fetching results)
-            //viewerControls.clearScene(); // Clear scene if a new analysis starts
+            selectProject(menuState.projectId);
+            setMenuState(null);
         } else if (action === 'delete') {
             setIsDeleteModalOpen(true);
+            // Keep menuState so modal has access to projectId/projectName
+            setMenuState(prev => prev ? { ...prev, isOpen: false } : null);
         } else if (action === 'rename') {
             setIsRenameModalOpen(true);
+            // Keep menuState so modal has access to projectId/projectName
+            setMenuState(prev => prev ? { ...prev, isOpen: false } : null);
         }
-        setMenuState(null);
     };
 
     // Close context menu on any click outside
     React.useEffect(() => {
+        // Only add listener when menu is open
+        if (!menuState?.isOpen) return;
+
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
             // Only close if click is not inside a modal or a project button
             const isProjectButton = target.closest('[data-project-id]');
-            if (menuState?.isOpen && !isProjectButton) {
+            if (!isProjectButton) {
                 setMenuState(null);
             }
         };
         window.addEventListener('click', handleClickOutside);
         return () => window.removeEventListener('click', handleClickOutside);
-    }, [menuState]);
+    }, [menuState?.isOpen]);
 
     const handleDeleteConfirm = () => {
         if (menuState) {
             deleteProject(menuState.projectId);
             setIsDeleteModalOpen(false);
+            setMenuState(null);
         }
     };
 
@@ -104,29 +110,39 @@ const ProjectList: React.FC<ProjectListProps> = ({
         if (menuState) {
             await renameProject(menuState.projectId, newName);
             setIsRenameModalOpen(false);
+            setMenuState(null);
         }
+    };
+
+    const handleModalClose = (modalType: 'delete' | 'rename') => {
+        if (modalType === 'delete') {
+            setIsDeleteModalOpen(false);
+        } else {
+            setIsRenameModalOpen(false);
+        }
+        setMenuState(null);
     };
 
     const getAnalyzeButtonText = (status: ProjectStatus) => {
         switch (status) {
-            case 'Completed': return 'View Report';
-            case 'Ready for Mapping': return 'Start Mapping/Analysis';
-            case 'Mapping in Progress': return 'Continue Mapping';
-            case 'Processing': return 'View Status';
-            default: return 'Analyze';
+            case 'Completed': return t('view_report');
+            case 'Ready for Mapping': return t('start_mapping');
+            case 'Mapping in Progress': return t('continue_mapping');
+            case 'Processing': return t('view_status');
+            default: return t('analyze');
         }
     }
 
 
     if (isLoading) {
-        return <li className="p-3 bg-gray-900/50 rounded-md text-center text-gray-400">Loading projects...</li>;
+        return <ProjectListSkeleton count={4} />;
     }
 
     return (
         <>
             <ul id="project-list" className="space-y-2">
                 {projects.length === 0 ? (
-                    <li className="p-3 bg-gray-900/50 rounded-md text-center text-gray-400">No projects found.</li>
+                    <li className="p-3 bg-gray-900/50 rounded-md text-center text-gray-400">{t('no_projects')}</li>
                 ) : (
                     projects.map(project => (
                         <li 
@@ -148,7 +164,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
                                 onClick={(e) => openContextMenu(e, project)}
                                 data-project-id={project.id}
                                 className={`p-1 rounded-full text-gray-400 hover:bg-gray-600 transition ${currentProjectId === project.id ? 'text-white' : ''}`}
-                                title="Project Actions"
+                                title={t('project_actions')}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 pointer-events-none" viewBox="0 0 20 20" fill="currentColor"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" /></svg>
                             </button>
@@ -168,11 +184,11 @@ const ProjectList: React.FC<ProjectListProps> = ({
                     </button>
                     <button onClick={() => handleMenuAction('rename')} className="w-full text-left px-3 py-2 text-sm text-gray-200 hover:bg-indigo-600 transition flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                        Rename
+                        {t('rename')}
                     </button>
                     <button onClick={() => handleMenuAction('delete')} className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-red-600 hover:text-white transition flex items-center gap-2 border-t border-gray-600 mt-1 pt-1">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        Delete
+                        {t('delete')}
                     </button>
                 </div>
             )}
@@ -180,14 +196,14 @@ const ProjectList: React.FC<ProjectListProps> = ({
             {/* Modals */}
             {menuState && (
                 <>
-                    <DeleteModal 
-                        isOpen={isDeleteModalOpen} 
-                        onClose={() => setIsDeleteModalOpen(false)} 
+                    <DeleteModal
+                        isOpen={isDeleteModalOpen}
+                        onClose={() => handleModalClose('delete')}
                         onConfirm={handleDeleteConfirm}
                     />
-                    <RenameModal 
+                    <RenameModal
                         isOpen={isRenameModalOpen}
-                        onClose={() => setIsRenameModalOpen(false)}
+                        onClose={() => handleModalClose('rename')}
                         currentName={menuState.projectName}
                         onConfirm={handleRenameConfirm}
                     />

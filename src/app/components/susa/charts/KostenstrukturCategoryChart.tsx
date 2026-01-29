@@ -4,63 +4,84 @@
 import React, { useEffect, useRef } from 'react';
 import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { KpiRow } from '@/types/susa';
-import { Vault } from 'lucide-react';
 
 interface KostenstrukturCategoryChartProps {
     kpiData: KpiRow[];
 }
 
+/** Type guard to check if value has parsedValue property */
+function hasParsedValue(value: unknown): value is { parsedValue: number } {
+    return (
+        typeof value === 'object' &&
+        value !== null &&
+        'parsedValue' in value &&
+        typeof (value as { parsedValue: unknown }).parsedValue === 'number'
+    );
+}
+
+/** Safely extract numeric value from KpiRow field */
+function getNumericValue(value: unknown): number {
+    if (typeof value === 'number') return value;
+    if (hasParsedValue(value)) return value.parsedValue;
+    return 0;
+}
+
+const OVERHEAD_CATEGORIES = [
+    'Abschreibungen & Anlagen',
+    'Fremdleistungen',
+    'Verwaltung & Büro',
+    'IT & Kommunikation',
+    'Reisen & Repräsentation',
+    'Versicherungen & Gebühren',
+    'Sonstige betriebliche Aufwendungen'
+] as const;
+
+const CHART_COLORS = [
+    '#EF4444', '#F97316', '#EAB308', '#22C55E',
+    '#3B82F6', '#6366F1', '#8B5CF6', '#D946EF',
+];
+
 const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = ({ kpiData }) => {
     const chartRef = useRef<HTMLCanvasElement>(null);
-    const chartInstance = useRef<Chart | null>(null);
+    const chartInstance = useRef<Chart<'doughnut'> | null>(null);
 
+    // Cleanup on unmount only - separate from data update effect
+    useEffect(() => {
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+                chartInstance.current = null;
+            }
+        };
+    }, []);
+
+    // Create or update chart when data changes
     useEffect(() => {
         if (!chartRef.current) return;
 
         const gesamtData = kpiData.find(d => d.Gruppe === 'Gesamtunternehmen');
         if (!gesamtData) return;
 
-        if (chartInstance.current) {
-            chartInstance.current.destroy();
-        }
-        type Obj = Record<string, unknown>;
-        // --- Logic from original createKostenstrukturChartWithCategory ---
-        const combinedData = {
-            ...(gesamtData as Obj),
-            ...((gesamtData.AdditionalData ?? {}) as Obj),
-        };
-        const overheadCategories = [
-            'Abschreibungen & Anlagen', 'Fremdleistungen', 'Verwaltung & Büro',
-            'IT & Kommunikation', 'Reisen & Repräsentation',
-            'Versicherungen & Gebühren', 'Sonstige betriebliche Aufwendungen'
-        ];
-        const chartData: number[] = [];
-        
-        const chartLabels = ['Personalkosten'];
-        const pk = combinedData.Personalkosten;
-        const pkValue = typeof pk === "number" ? pk : 0;
-        chartData.push(Math.abs(pkValue));
+        // Merge base data with AdditionalData for category lookups
+        const additionalData = gesamtData.AdditionalData ?? {};
 
-        const chartColors = [
-            '#EF4444', '#F97316', '#EAB308', '#22C55E',
-            '#3B82F6', '#6366F1', '#8B5CF6', '#D946EF',
-        ];
+        const chartLabels: string[] = ['Personalkosten'];
+        const chartData: number[] = [Math.abs(gesamtData.Personalkosten)];
+        const chartColors = [...CHART_COLORS];
 
-        overheadCategories.forEach(category => {
-            let value = combinedData[category];
-            if (value != null)
-                if (typeof value === "object" && value !== null && "parsedValue" in value) {
-                    value = value.parsedValue;
-                }
+        // Process overhead categories
+        for (const category of OVERHEAD_CATEGORIES) {
+            // Check both base data and AdditionalData
+            const value = gesamtData[category] ?? additionalData[category];
+            const numericValue = getNumericValue(value);
 
-            if (typeof value === 'number' && value !== 0) {
+            if (numericValue !== 0) {
                 chartLabels.push(category);
-                chartData.push(Math.abs(value));
+                chartData.push(Math.abs(numericValue));
             }
-        });
+        }
 
-        const ebitRaw = combinedData.EBIT;
-        const ebit = typeof ebitRaw === "number" ? ebitRaw : 0;
+        const ebit = gesamtData.EBIT;
 
         if (ebit > 0) {
             chartLabels.push("EBIT");
@@ -68,7 +89,16 @@ const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = 
             chartColors.push("#10B981");
         }
 
+        // Update existing chart - labels and data may change dynamically
+        if (chartInstance.current) {
+            chartInstance.current.data.labels = chartLabels;
+            chartInstance.current.data.datasets[0].data = chartData;
+            chartInstance.current.data.datasets[0].backgroundColor = chartColors.slice(0, chartData.length);
+            chartInstance.current.update('none');
+            return;
+        }
 
+        // Create new chart only on first render
         const data: ChartConfiguration<'doughnut'>['data'] = {
             labels: chartLabels,
             datasets: [{
@@ -78,9 +108,8 @@ const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = 
                 borderWidth: 1
             }]
         };
-        // --- End Logic ---
 
-        chartInstance.current = new Chart(chartRef.current, {
+        chartInstance.current = new Chart<'doughnut'>(chartRef.current, {
             type: 'doughnut',
             data: data,
             options: {
@@ -96,14 +125,6 @@ const KostenstrukturCategoryChart: React.FC<KostenstrukturCategoryChartProps> = 
                 }
             }
         });
-
-        // Cleanup function
-        return () => {
-            if (chartInstance.current) {
-                chartInstance.current.destroy();
-                chartInstance.current = null;
-            }
-        };
     }, [kpiData]);
 
     return <canvas ref={chartRef} id="kostenstrukturChartCategory"></canvas>;

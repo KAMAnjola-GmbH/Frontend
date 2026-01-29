@@ -1,0 +1,61 @@
+'use client';
+
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import Footer from '@/app/components/ui/Footer';
+
+export default function HomePage() {
+  const t = useTranslations('home');
+
+  return (
+    <div className="flex flex-col h-full w-full overflow-y-auto bg-slate-900">
+
+      {/* --- HERO SECTION --- */}
+      <section className="relative min-h-[80vh] flex items-center justify-center text-center overflow-hidden shrink-0">
+
+        {/* VIDEO LAYER (Background) */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            id="bg-video"
+            className="w-full h-full object-cover"
+          >
+            <source src="/R0sitavideobg.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent z-10"></div>
+        <div className="relative z-20 px-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight drop-shadow-2xl">
+            {t('hero_title')}
+          </h1>
+          <p className="mt-6 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto drop-shadow-lg">
+            {t('hero_description')}
+          </p>
+        </div>
+      </section>
+
+      <section className="py-20 bg-slate-800 z-10">
+        <div className="container mx-auto text-center z-20">
+          <h2 className="text-3xl font-bold text-white">{t('sections_coming_soon')}</h2>
+          <p className="text-gray-400 mt-4">{t('sections_description')}</p>
+        </div>
+      </section>
+
+      <section className="py-20 bg-slate-900 z-10">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold text-white">...</h2>
+        </div>
+      </section>
+
+      {/* --- FOOTER --- */}
+      <div className="shrink-0 relative z-10">
+        <Footer />
+      </div>
+
+    </div>
+  );
+}

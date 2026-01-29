@@ -24,8 +24,13 @@ export interface JobUpdateData {
 }
 
 export interface UnmappedAccount {
+    // The canonical keys we want
     konto: string;
     bezeichnung: string;
+    
+    // The "messy" keys that might exist from the import
+    Konto?: string;
+    Bezeichnung?: string;
 }
 
 export interface PreAnalysisResult {

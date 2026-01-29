@@ -1,0 +1,43 @@
+{
+  "hash": "2a6a317d",
+  "configHash": "4009cb76",
+  "lockfileHash": "40419c64",
+  "browserHash": "c1f24738",
+  "optimized": {
+    "three": {
+      "src": "../../node_modules/three/build/three.module.js",
+      "file": "three.js",
+      "fileHash": "562b3139",
+      "needsInterop": false
+    },
+    "three/addons/controls/OrbitControls.js": {
+      "src": "../../node_modules/three/examples/jsm/controls/OrbitControls.js",
+      "file": "three_addons_controls_OrbitControls__js.js",
+      "fileHash": "b472e206",
+      "needsInterop": false
+    },
+    "three/addons/loaders/DRACOLoader.js": {
+      "src": "../../node_modules/three/examples/jsm/loaders/DRACOLoader.js",
+      "file": "three_addons_loaders_DRACOLoader__js.js",
+      "fileHash": "d36e4974",
+      "needsInterop": false
+    },
+    "three/addons/loaders/GLTFLoader.js": {
+      "src": "../../node_modules/three/examples/jsm/loaders/GLTFLoader.js",
+      "file": "three_addons_loaders_GLTFLoader__js.js",
+      "fileHash": "db8d44e4",
+      "needsInterop": false
+    },
+    "three/addons/loaders/RGBELoader.js": {
+      "src": "../../node_modules/three/examples/jsm/loaders/RGBELoader.js",
+      "file": "three_addons_loaders_RGBELoader__js.js",
+      "fileHash": "e2639ff0",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-VOEXQ6SG": {
+      "file": "chunk-VOEXQ6SG.js"
+    }
+  }
+}

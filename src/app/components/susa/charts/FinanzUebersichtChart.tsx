@@ -2,43 +2,77 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import Chart, { ChartConfiguration } from 'chart.js/auto'; 
+import Chart, { ChartConfiguration } from 'chart.js/auto';
 import { KpiRow } from '@/types/susa';
 
 interface FinanzUebersichtChartProps {
     kpiData: KpiRow[];
 }
 
+const CHART_CONFIG: Omit<ChartConfiguration<'bar'>, 'data'> = {
+    type: 'bar',
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { color: '#9CA3AF' },
+                grid: { color: 'rgba(156, 163, 175, 0.2)' }
+            },
+            x: {
+                ticks: { color: '#D1D5DB' },
+                grid: { display: false }
+            }
+        },
+        plugins: {
+            legend: { display: false },
+            title: { display: false }
+        }
+    }
+};
+
 const FinanzUebersichtChart: React.FC<FinanzUebersichtChartProps> = ({ kpiData }) => {
     const chartRef = useRef<HTMLCanvasElement>(null);
-    const chartInstance = useRef<Chart | null>(null);
+    const chartInstance = useRef<Chart<'bar'> | null>(null);
 
+    // Cleanup on unmount only - separate from data update effect
+    useEffect(() => {
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+                chartInstance.current = null;
+            }
+        };
+    }, []);
+
+    // Create or update chart when data changes
     useEffect(() => {
         if (!chartRef.current) return;
 
         const gesamtData = kpiData.find(d => d.Gruppe === 'Gesamtunternehmen');
         if (!gesamtData) return;
 
+        const costs = Math.abs(gesamtData.Personalkosten) + Math.abs(gesamtData['Overhead-Kosten']);
+        const newData = [gesamtData.Erlöse, costs, gesamtData.EBIT];
+
+        // Update existing chart instead of destroying and recreating
         if (chartInstance.current) {
-            chartInstance.current.destroy();
+            chartInstance.current.data.datasets[0].data = newData;
+            chartInstance.current.update('none');
+            return;
         }
 
-        // --- Logic from original createFinanzUebersichtChart ---
-        const costs = Math.abs(gesamtData.Personalkosten) + Math.abs(gesamtData['Overhead-Kosten']);
-
+        // Create new chart only on first render
         const data: ChartConfiguration<'bar'>['data'] = {
             labels: ['Erlöse', 'Kosten', 'EBIT'],
             datasets: [{
                 label: 'Betrag in €',
-                data: [
-                    gesamtData.Erlöse,
-                    costs,
-                    gesamtData.EBIT
-                ],
+                data: newData,
                 backgroundColor: [
-                    'rgba(59, 130, 246, 0.7)', // Blue (Erlöse)
-                    'rgba(239, 68, 68, 0.7)',  // Red (Kosten)
-                    'rgba(34, 197, 94, 0.7)'   // Green (EBIT)
+                    'rgba(59, 130, 246, 0.7)',
+                    'rgba(239, 68, 68, 0.7)',
+                    'rgba(34, 197, 94, 0.7)'
                 ],
                 borderColor: [
                     'rgba(59, 130, 246, 1)',
@@ -48,43 +82,11 @@ const FinanzUebersichtChart: React.FC<FinanzUebersichtChartProps> = ({ kpiData }
                 borderWidth: 1
             }]
         };
-        // --- End Logic ---
 
-        chartInstance.current = new Chart(chartRef.current, {
-            type: 'bar',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { color: '#9CA3AF' },
-                        grid: { color: 'rgba(156, 163, 175, 0.2)' }
-                    },
-                    x: {
-                        ticks: { color: '#D1D5DB' },
-                        grid: { display: false }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    title: {
-                        display: false
-                    }
-                }
-            }
+        chartInstance.current = new Chart<'bar'>(chartRef.current, {
+            ...CHART_CONFIG,
+            data
         });
-
-        // Cleanup function
-        return () => {
-            if (chartInstance.current) {
-                chartInstance.current.destroy();
-                chartInstance.current = null;
-            }
-        };
     }, [kpiData]);
 
     return <canvas ref={chartRef} id="finanzUebersichtChart"></canvas>;
