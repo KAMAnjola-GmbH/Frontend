@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { User } from '@auth0/nextjs-auth0/types';
 
 interface AuthAreaProps {
@@ -16,6 +17,7 @@ export default function AuthArea({ user, isLoading }: AuthAreaProps) {
 
       <div className="flex items-center gap-3">
         <span className="font-semibold">{user.name}</span>
+        <Link href="/dashboard/profile" className="group relative">
         {user.picture && (
           <div style={{borderRadius: '30px', overflow: 'hidden'}}>
             <Image
@@ -26,6 +28,7 @@ export default function AuthArea({ user, isLoading }: AuthAreaProps) {
             />
           </div>
         )}
+        </Link>
         <a
           href="/auth/logout"
           className="bg-gray-700 hover:bg-red-600 text-white font-semibold p-1.5 rounded-full transition"

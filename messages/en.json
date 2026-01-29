@@ -231,6 +231,32 @@
     "min_stress": "Min Stress",
     "avg_stress": "Average Stress"
   },
+  "profile": {
+    "title": "Profile Settings",
+    "subtitle": "Manage your personal information and preferences",
+    "avatar": "Profile Picture",
+    "uploadAvatar": "Upload Photo",
+    "removeAvatar": "Remove Photo",
+    "avatarHint": "JPEG, PNG, GIF, or WebP. Max 5MB.",
+    "uploading": "Uploading...",
+    "avatarUpdated": "Profile picture updated successfully!",
+    "avatarDeleted": "Profile picture removed.",
+    "profileInfo": "Profile Information",
+    "displayName": "Display Name",
+    "displayNamePlaceholder": "Enter your display name",
+    "displayNameHint": "Leave empty to use your Auth0 name.",
+    "bio": "Bio",
+    "bioPlaceholder": "Tell us about yourself...",
+    "preferredLanguage": "Preferred Language",
+    "languageAuto": "Auto-detect",
+    "accountInfo": "Account Information",
+    "email": "Email",
+    "userId": "User ID",
+    "memberSince": "Member Since",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "saveSuccess": "Profile updated successfully!"
+  },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back, {name}",
@@ -274,6 +300,140 @@
       "newAnalysis": "New Analysis",
       "uploadModel": "Upload 3D Model",
       "documentation": "Documentation"
+    }
+  },
+  "solutions": {
+    "hero": {
+      "title": "Digital Transformation for Industry",
+      "subtitle": "Combine financial analytics with AI technology to make data-driven decisions",
+      "cta": "Explore Our Platform"
+    },
+    "industries": {
+      "title": "Built for Your Industry",
+      "subtitle": "We're developing solutions that understand the specific challenges of your sector",
+      "manufacturing": {
+        "title": "Manufacturing",
+        "description": "Monitor production lines in real-time, visualize your assets as digital twins, and analyze financial KPIs to identify optimization potential.",
+        "capabilities": [
+          "Real-time asset monitoring",
+          "Production KPI analysis",
+          "3D visualization of equipment"
+        ]
+      },
+      "logistics": {
+        "title": "Logistics & Warehousing",
+        "description": "Simulate material flows, visualize warehouse layouts, and track operational costs with integrated financial analysis.",
+        "capabilities": [
+          "Warehouse visualization",
+          "Cost structure analysis",
+          "Process flow simulation"
+        ]
+      },
+      "energy": {
+        "title": "Energy & Utilities",
+        "description": "Monitor consumption patterns, visualize infrastructure, and analyze financial impact of energy decisions.",
+        "capabilities": [
+          "Consumption monitoring",
+          "Infrastructure visualization",
+          "Cost-benefit analysis"
+        ]
+      }
+    },
+    "capabilities": {
+      "title": "Platform Capabilities",
+      "subtitle": "What our platform offers today and what's coming",
+      "available": {
+        "title": "Available Now",
+        "kpiAnalyzer": {
+          "title": "SuSa KPI Analyzer",
+          "description": "Upload your financial data (SuSa - Summen und Salden) and get instant analysis with visualized KPIs, cost structures, and financial overviews.",
+          "features": [
+            "Excel/CSV upload and processing",
+            "Automatic account categorization",
+            "Interactive charts and visualizations",
+            "PDF, Excel, and CSV export"
+          ]
+        },
+        "modelViewer": {
+          "title": "3D Model Viewer",
+          "description": "Upload and visualize your 3D models (GLB/GLTF). Explore your digital assets with interactive controls.",
+          "features": [
+            "GLB/GLTF model support",
+            "Interactive 3D navigation",
+            "Stress simulation (beta)",
+            "Cloud storage for your models"
+          ]
+        }
+      },
+      "roadmap": {
+        "title": "On Our Roadmap",
+        "items": [
+          {
+            "title": "Predictive Maintenance",
+            "description": "AI-powered failure prediction for your equipment"
+          },
+          {
+            "title": "Real-time Monitoring",
+            "description": "Live data integration from sensors and IoT devices"
+          },
+          {
+            "title": "Process Optimization",
+            "description": "Simulation-based parameter optimization"
+          },
+          {
+            "title": "ESG Reporting",
+            "description": "Sustainability metrics and carbon footprint tracking"
+          }
+        ]
+      }
+    },
+    "workflow": {
+      "title": "How It Works",
+      "subtitle": "Simple steps to get started",
+      "steps": {
+        "upload": {
+          "title": "1. Upload Your Data",
+          "description": "Import your financial data or 3D models through our secure interface."
+        },
+        "analyze": {
+          "title": "2. Automatic Analysis",
+          "description": "Our algorithms process and categorize your data, identifying key metrics."
+        },
+        "visualize": {
+          "title": "3. Interactive Visualization",
+          "description": "Explore your data through charts, 3D views, and customizable dashboards."
+        },
+        "export": {
+          "title": "4. Export & Share",
+          "description": "Generate professional reports in PDF, Excel, or CSV format."
+        }
+      }
+    },
+    "integrations": {
+      "title": "Integration Ready",
+      "subtitle": "Designed to work with your existing systems",
+      "planned": {
+        "title": "Planned Integrations",
+        "erp": {
+          "title": "ERP Systems",
+          "description": "SAP, Microsoft Dynamics, Oracle ERP"
+        },
+        "protocols": {
+          "title": "Industrial Protocols",
+          "description": "OPC UA, MQTT, Modbus"
+        },
+        "cloud": {
+          "title": "Cloud Platforms",
+          "description": "AWS, Azure, Google Cloud"
+        }
+      },
+      "note": "Currently in development. Contact us to discuss your integration needs."
+    },
+    "cta": {
+      "title": "Interested in Our Platform?",
+      "subtitle": "Try our available features or contact us to learn about upcoming capabilities",
+      "tryNow": "Try SuSa Analyzer",
+      "contact": "Contact Us"
     }
   }
 }

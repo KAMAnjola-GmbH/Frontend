@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
@@ -75,20 +76,27 @@ function DashboardPage() {
                 {/* Header with welcome message */}
                 <header className="mb-10">
                     <div className="flex items-center gap-4 mb-2">
-                        {userPicture ? (
-                            <div className="relative w-14 h-14 rounded-full border-2 border-blue-500/50 shadow-lg shadow-blue-500/20 overflow-hidden">
-                                <Image
-                                    src={userPicture}
-                                    alt={userName}
-                                    fill
-                                    className="object-cover"
-                                />
-                            </div>
-                        ) : (
-                            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-blue-500/20">
-                                {userInitial}
-                            </div>
-                        )}
+                        <Link href="/dashboard/profile" className="group relative">
+                            {userPicture ? (
+                                <div className="relative w-14 h-14 rounded-full border-2 border-blue-500/50 shadow-lg shadow-blue-500/20 overflow-hidden group-hover:border-blue-400 transition-colors">
+                                    <Image
+                                        src={userPicture}
+                                        alt={userName}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                        <svg className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-blue-500/20 group-hover:from-blue-400 group-hover:to-purple-500 transition-colors">
+                                    {userInitial}
+                                </div>
+                            )}
+                        </Link>
                         <div>
                             <h1 className="text-3xl font-bold text-white">
                                 {t('welcome', { name: userName })}
