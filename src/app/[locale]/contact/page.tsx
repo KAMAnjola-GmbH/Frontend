@@ -167,8 +167,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-white font-medium">{t('email_label')}</h3>
-                    <a href="mailto:info@r0sita.com" className="text-cyan-400 hover:text-cyan-300 transition">
-                      info@r0sita.com
+                    <a href="mailto:team@kamanjola.de" className="text-cyan-400 hover:text-cyan-300 transition">
+                      team@kamanjola.de
                     </a>
                   </div>
                 </div>
@@ -183,9 +183,9 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-white font-medium">{t('address_label')}</h3>
                     <p className="text-gray-400">
-                      r0sita GmbH<br />
-                      Musterstrasse 123<br />
-                      12345 Berlin<br />
+                      Kamanjola GmbH<br />
+                      Dennewartstraße 25-27<br />
+                      52068 Aachen<br />
                       Deutschland
                     </p>
                   </div>

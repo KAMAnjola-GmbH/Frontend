@@ -8,10 +8,11 @@
  *
  * const dashboard = await userApi.getDashboard();
  * const profile = await userApi.getProfile();
+ * await userApi.updateProfile({ displayName: 'New Name' });
  */
 
 import { apiClient } from './client';
-import type { DashboardData, UserInfo } from '@/types/user';
+import type { DashboardData, UserProfile, UpdateProfileDto } from '@/types/user';
 
 export const userApi = {
     /**
@@ -24,9 +25,36 @@ export const userApi = {
 
     /**
      * Get user profile information.
-     * @returns User profile (ID, name, email, avatar)
+     * Creates a new profile if one doesn't exist.
+     * @returns User profile with custom settings
      */
-    getProfile(): Promise<UserInfo> {
-        return apiClient.get<UserInfo>('/user/profile');
+    getProfile(): Promise<UserProfile> {
+        return apiClient.get<UserProfile>('/user/profile');
+    },
+
+    /**
+     * Update user profile information.
+     * @param data Profile fields to update
+     * @returns Updated user profile
+     */
+    updateProfile(data: UpdateProfileDto): Promise<UserProfile> {
+        return apiClient.put<UserProfile>('/user/profile', data);
+    },
+
+    /**
+     * Upload a custom avatar image.
+     * @param file Image file (JPEG, PNG, GIF, WebP; max 5MB)
+     * @returns Updated user profile with new avatar URL
+     */
+    uploadAvatar(file: File): Promise<UserProfile> {
+        return apiClient.upload<UserProfile>('/user/profile/avatar', file);
+    },
+
+    /**
+     * Delete custom avatar and revert to Auth0 avatar.
+     * @returns Updated user profile without custom avatar
+     */
+    deleteAvatar(): Promise<UserProfile> {
+        return apiClient.delete<UserProfile>('/user/profile/avatar');
     },
 };

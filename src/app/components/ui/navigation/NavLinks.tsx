@@ -11,13 +11,8 @@ export default function NavLinks() {
     <ul className="lg:flex items-center space-x-6 font-semibold text-base text-cyan-300">
       <ProductsDropdown />
       <li>
-        <Link href="/" className="hover:text-white transition">
+        <Link href="/solutions" className="hover:text-white transition">
           {t('solutions')}
-        </Link>
-      </li>
-      <li>
-        <Link href="/" className="hover:text-white transition">
-          {t('workshop')}
         </Link>
       </li>
       <li>
@@ -26,7 +21,7 @@ export default function NavLinks() {
         </Link>
       </li>
       <li>
-        <Link href="/" className="hover:text-white transition">
+        <Link href="/learn" className="hover:text-white transition">
           {t('learn')}
         </Link>
       </li>

@@ -11,6 +11,28 @@ export interface UserInfo {
 }
 
 /**
+ * Extended user profile stored in database.
+ */
+export interface UserProfile {
+    userId: string;
+    displayName?: string;
+    avatarUrl?: string;
+    bio?: string;
+    preferredLanguage?: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+/**
+ * DTO for updating user profile.
+ */
+export interface UpdateProfileDto {
+    displayName?: string;
+    bio?: string;
+    preferredLanguage?: string;
+}
+
+/**
  * Business KPIs aggregated from all products.
  */
 export interface BusinessKpis {

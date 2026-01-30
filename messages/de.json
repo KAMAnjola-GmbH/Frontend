@@ -19,9 +19,82 @@
   },
   "home": {
     "hero_title": "Visualisieren, Simulieren und Optimieren",
-    "hero_description": "Unsere Plattform bringt Ihre physischen Anlagen in die digitale Welt und ermöglicht Echtzeitüberwachung, vorausschauende KI-Analysen und fortschrittliche Simulationen für Wirtschaflichkeit Ihrer Geschäftsprozessen.",
-    "sections_coming_soon": "Weitere Abschnitte folgen",
-    "sections_description": "Funktionen, Lösungen und Dokumentation werden hier detailliert beschrieben."
+    "hero_description": "Unsere Plattform bringt Ihre physischen Anlagen in die digitale Welt und ermöglicht Echtzeitüberwachung, vorausschauende KI-Analysen und fortschrittliche Simulationen für Wirtschaftlichkeit Ihrer Geschäftsprozesse.",
+    "hero_cta": "Plattform erkunden",
+    "hero_cta_secondary": "Mehr erfahren",
+    "products": {
+      "title": "Unsere Tools",
+      "subtitle": "Starten Sie noch heute mit der Datenanalyse",
+      "susa": {
+        "title": "SuSa Analytics",
+        "description": "Laden Sie Ihre Finanzdaten hoch und erhalten Sie sofortige KPI-Analysen mit interaktiven Diagrammen und exportierbaren Berichten.",
+        "features": ["Excel/CSV-Upload", "Automatische Kategorisierung", "PDF/Excel-Export"],
+        "cta": "SuSa testen"
+      },
+      "viewer": {
+        "title": "3D Modell Viewer",
+        "description": "Visualisieren Sie Ihre CAD-Modelle im Browser. Laden Sie GLB/GLTF-Dateien hoch und erkunden Sie sie mit interaktiven Steuerungen.",
+        "features": ["GLB/GLTF-Support", "Interaktive Navigation", "Stresssimulation"],
+        "cta": "Viewer testen"
+      }
+    },
+    "howItWorks": {
+      "title": "So funktioniert es",
+      "subtitle": "Von Daten zu Erkenntnissen in vier Schritten",
+      "steps": [
+        {
+          "title": "Hochladen",
+          "description": "Importieren Sie Ihre Finanzdaten oder 3D-Modelle über unsere sichere Schnittstelle"
+        },
+        {
+          "title": "Analysieren",
+          "description": "Unsere Algorithmen verarbeiten Ihre Daten und identifizieren automatisch Schlüsselkennzahlen"
+        },
+        {
+          "title": "Visualisieren",
+          "description": "Erkunden Sie interaktive Diagramme, 3D-Ansichten und anpassbare Dashboards"
+        },
+        {
+          "title": "Exportieren",
+          "description": "Erstellen Sie professionelle Berichte im PDF-, Excel- oder CSV-Format"
+        }
+      ]
+    },
+    "industries": {
+      "title": "Für die Industrie entwickelt",
+      "subtitle": "Lösungen für Fertigung, Logistik und mehr",
+      "items": [
+        {
+          "title": "Fertigung",
+          "description": "Überwachen Sie Produktions-KPIs und visualisieren Sie Anlagen als digitale Zwillinge"
+        },
+        {
+          "title": "Logistik",
+          "description": "Analysieren Sie Betriebskosten und simulieren Sie Lagerlayouts"
+        },
+        {
+          "title": "Energie",
+          "description": "Verfolgen Sie Verbrauchsmuster und optimieren Sie die Ressourcenzuweisung"
+        }
+      ]
+    },
+    "vision": {
+      "title": "Die Vision",
+      "subtitle": "Wohin wir gehen",
+      "description": "Wir bauen eine Plattform, die Finanzanalysen mit 3D-Visualisierung und Echtzeitdaten verbindet. Unser Ziel: Ihnen einen vollständigen digitalen Überblick über Ihre Abläufe zu geben.",
+      "roadmap": [
+        "Echtzeit-Sensorintegration",
+        "Predictive Maintenance mit KI",
+        "ERP-Systemanbindungen",
+        "Kollaborative Arbeitsbereiche"
+      ]
+    },
+    "cta": {
+      "title": "Bereit loszulegen?",
+      "subtitle": "Erstellen Sie ein kostenloses Konto und erkunden Sie unsere Plattform",
+      "primary": "Konto erstellen",
+      "secondary": "Vertrieb kontaktieren"
+    }
   },
   "cookie": {
     "title": "Cookie-Einstellungen",
@@ -61,7 +134,7 @@
     "email_label": "E-Mail",
     "address_label": "Adresse",
     "hours_label": "Geschäftszeiten",
-    "hours": "Montag - Freitag: 09:00 - 18:00\nSamstag & Sonntag: Geschlossen"
+    "hours": "Montag - Freitag: 09:00 - 16:00\nSamstag & Sonntag: Geschlossen"
   },
   "imprint": {
     "title": "Impressum",
@@ -231,6 +304,32 @@
     "min_stress": "Min. Spannung",
     "avg_stress": "Durchschn. Spannung"
   },
+  "profile": {
+    "title": "Profileinstellungen",
+    "subtitle": "Verwalten Sie Ihre persönlichen Informationen und Einstellungen",
+    "avatar": "Profilbild",
+    "uploadAvatar": "Foto hochladen",
+    "removeAvatar": "Foto entfernen",
+    "avatarHint": "JPEG, PNG, GIF oder WebP. Max 5MB.",
+    "uploading": "Wird hochgeladen...",
+    "avatarUpdated": "Profilbild erfolgreich aktualisiert!",
+    "avatarDeleted": "Profilbild entfernt.",
+    "profileInfo": "Profilinformationen",
+    "displayName": "Anzeigename",
+    "displayNamePlaceholder": "Geben Sie Ihren Anzeigenamen ein",
+    "displayNameHint": "Leer lassen, um Ihren Auth0-Namen zu verwenden.",
+    "bio": "Bio",
+    "bioPlaceholder": "Erzählen Sie uns etwas über sich...",
+    "preferredLanguage": "Bevorzugte Sprache",
+    "languageAuto": "Automatisch erkennen",
+    "accountInfo": "Kontoinformationen",
+    "email": "E-Mail",
+    "userId": "Benutzer-ID",
+    "memberSince": "Mitglied seit",
+    "saveChanges": "Änderungen speichern",
+    "saving": "Wird gespeichert...",
+    "saveSuccess": "Profil erfolgreich aktualisiert!"
+  },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Willkommen zurück, {name}",
@@ -274,6 +373,262 @@
       "newAnalysis": "Neue Analyse",
       "uploadModel": "3D Modell hochladen",
       "documentation": "Dokumentation"
+    }
+  },
+  "solutions": {
+    "hero": {
+      "title": "Digitale Transformation für die Industrie",
+      "subtitle": "Verbinden Sie Finanzanalysen mit KI-Technologie für datengestützte Entscheidungen",
+      "cta": "Plattform erkunden"
+    },
+    "industries": {
+      "title": "Entwickelt für Ihre Branche",
+      "subtitle": "Wir entwickeln Lösungen, die die spezifischen Herausforderungen Ihres Sektors verstehen",
+      "manufacturing": {
+        "title": "Fertigung",
+        "description": "Überwachen Sie Produktionslinien in Echtzeit, visualisieren Sie Ihre Anlagen als digitale Zwillinge und analysieren Sie Finanz-KPIs zur Identifikation von Optimierungspotenzial.",
+        "capabilities": [
+          "Echtzeit-Anlagenüberwachung",
+          "Produktions-KPI-Analyse",
+          "3D-Visualisierung von Anlagen"
+        ]
+      },
+      "logistics": {
+        "title": "Logistik & Lagerhaltung",
+        "description": "Simulieren Sie Materialflüsse, visualisieren Sie Lagerlayouts und verfolgen Sie Betriebskosten mit integrierter Finanzanalyse.",
+        "capabilities": [
+          "Lagervisualisierung",
+          "Kostenstrukturanalyse",
+          "Prozessflusssimulation"
+        ]
+      },
+      "energy": {
+        "title": "Energie & Versorgung",
+        "description": "Überwachen Sie Verbrauchsmuster, visualisieren Sie Infrastruktur und analysieren Sie die finanziellen Auswirkungen von Energieentscheidungen.",
+        "capabilities": [
+          "Verbrauchsüberwachung",
+          "Infrastrukturvisualisierung",
+          "Kosten-Nutzen-Analyse"
+        ]
+      }
+    },
+    "capabilities": {
+      "title": "Plattform-Funktionen",
+      "subtitle": "Was unsere Plattform heute bietet und was kommt",
+      "available": {
+        "title": "Jetzt verfügbar",
+        "kpiAnalyzer": {
+          "title": "SuSa KPI Analyzer",
+          "description": "Laden Sie Ihre Finanzdaten (SuSa - Summen und Salden) hoch und erhalten Sie sofortige Analysen mit visualisierten KPIs, Kostenstrukturen und Finanzübersichten.",
+          "features": [
+            "Excel/CSV-Upload und -Verarbeitung",
+            "Automatische Kontokategorisierung",
+            "Interaktive Diagramme und Visualisierungen",
+            "PDF-, Excel- und CSV-Export"
+          ]
+        },
+        "modelViewer": {
+          "title": "3D Modell Viewer",
+          "description": "Laden Sie Ihre 3D-Modelle (GLB/GLTF) hoch und visualisieren Sie sie. Erkunden Sie Ihre digitalen Assets mit interaktiven Steuerungen.",
+          "features": [
+            "GLB/GLTF Modell-Support",
+            "Interaktive 3D-Navigation",
+            "Stresssimulation (Beta)",
+            "Cloud-Speicher für Ihre Modelle"
+          ]
+        }
+      },
+      "roadmap": {
+        "title": "Auf unserer Roadmap",
+        "items": [
+          {
+            "title": "Predictive Maintenance",
+            "description": "KI-gestützte Fehlervorhersage für Ihre Anlagen"
+          },
+          {
+            "title": "Echtzeit-Monitoring",
+            "description": "Live-Datenintegration von Sensoren und IoT-Geräten"
+          },
+          {
+            "title": "Prozessoptimierung",
+            "description": "Simulationsbasierte Parameteroptimierung"
+          },
+          {
+            "title": "ESG-Reporting",
+            "description": "Nachhaltigkeitskennzahlen und CO₂-Fußabdruck-Tracking"
+          }
+        ]
+      }
+    },
+    "workflow": {
+      "title": "So funktioniert es",
+      "subtitle": "Einfache Schritte zum Start",
+      "steps": {
+        "upload": {
+          "title": "1. Daten hochladen",
+          "description": "Importieren Sie Ihre Finanzdaten oder 3D-Modelle über unsere sichere Schnittstelle."
+        },
+        "analyze": {
+          "title": "2. Automatische Analyse",
+          "description": "Unsere Algorithmen verarbeiten und kategorisieren Ihre Daten und identifizieren Schlüsselkennzahlen."
+        },
+        "visualize": {
+          "title": "3. Interaktive Visualisierung",
+          "description": "Erkunden Sie Ihre Daten durch Diagramme, 3D-Ansichten und anpassbare Dashboards."
+        },
+        "export": {
+          "title": "4. Exportieren & Teilen",
+          "description": "Erstellen Sie professionelle Berichte im PDF-, Excel- oder CSV-Format."
+        }
+      }
+    },
+    "integrations": {
+      "title": "Integrationsfähig",
+      "subtitle": "Entwickelt für die Zusammenarbeit mit Ihren bestehenden Systemen",
+      "planned": {
+        "title": "Geplante Integrationen",
+        "erp": {
+          "title": "ERP-Systeme",
+          "description": "SAP, Microsoft Dynamics, Oracle ERP"
+        },
+        "protocols": {
+          "title": "Industrieprotokolle",
+          "description": "OPC UA, MQTT, Modbus"
+        },
+        "cloud": {
+          "title": "Cloud-Plattformen",
+          "description": "AWS, Azure, Google Cloud"
+        }
+      },
+      "note": "Derzeit in Entwicklung. Kontaktieren Sie uns, um Ihre Integrationsanforderungen zu besprechen."
+    },
+    "cta": {
+      "title": "Interesse an unserer Plattform?",
+      "subtitle": "Testen Sie unsere verfügbaren Funktionen oder kontaktieren Sie uns für kommende Möglichkeiten",
+      "tryNow": "SuSa Analyzer testen",
+      "contact": "Kontakt aufnehmen"
+    }
+  },
+  "learn": {
+    "hero": {
+      "title": "Lernen & Ressourcen",
+      "subtitle": "Alles, was Sie brauchen, um das Beste aus r0sita herauszuholen"
+    },
+    "gettingStarted": {
+      "title": "Erste Schritte",
+      "subtitle": "Neu bei r0sita? Starten Sie hier.",
+      "items": {
+        "quickStart": {
+          "title": "Schnellstartanleitung",
+          "description": "In weniger als 10 Minuten einsatzbereit",
+          "duration": "10 Min."
+        },
+        "firstAnalysis": {
+          "title": "Ihre erste SuSa-Analyse",
+          "description": "Daten hochladen und Ihren ersten Finanzbericht erstellen",
+          "duration": "15 Min."
+        },
+        "first3dModel": {
+          "title": "Ihr erstes 3D-Modell hochladen",
+          "description": "Lernen Sie den 3D-Viewer mit Ihren GLB/GLTF-Dateien zu nutzen",
+          "duration": "10 Min."
+        }
+      }
+    },
+    "tutorials": {
+      "title": "Tutorials",
+      "subtitle": "Schritt-für-Schritt-Anleitungen für häufige Aufgaben",
+      "categories": {
+        "susaAnalytics": {
+          "title": "SuSa Analytics",
+          "items": [
+            {
+              "title": "KPI-Berichte verstehen",
+              "description": "Lernen Sie, Ihre Finanz-KPIs zu interpretieren"
+            },
+            {
+              "title": "Kontenzuordnung",
+              "description": "Wie Sie nicht zugeordnete Konten korrekt kategorisieren"
+            },
+            {
+              "title": "Berichte exportieren",
+              "description": "PDF-, Excel- und CSV-Exporte erstellen"
+            }
+          ]
+        },
+        "modelViewer": {
+          "title": "3D-Modell-Viewer",
+          "items": [
+            {
+              "title": "Navigationssteuerung",
+              "description": "Drehen, zoomen und schwenken Sie Ihre 3D-Modelle"
+            },
+            {
+              "title": "Unterstützte Dateiformate",
+              "description": "GLB, GLTF und Tipps zur Dateivorbereitung"
+            },
+            {
+              "title": "Stresssimulation",
+              "description": "Grundlegende Stressanalyse Ihrer Modelle durchführen"
+            }
+          ]
+        }
+      }
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "subtitle": "Schnelle Antworten auf häufige Fragen",
+      "items": [
+        {
+          "question": "Welche Dateiformate unterstützt der SuSa Analyzer?",
+          "answer": "Der SuSa Analyzer unterstützt Excel-Dateien (.xlsx, .xls) mit Ihren Summen-und-Salden-Daten. Das System erkennt und kategorisiert Kontenstrukturen automatisch."
+        },
+        {
+          "question": "Welche 3D-Formate kann ich hochladen?",
+          "answer": "Der 3D-Viewer unterstützt GLB- und GLTF-Formate. Wir empfehlen GLB für beste Kompatibilität. Maximale Dateigröße ist 100 MB."
+        },
+        {
+          "question": "Wie werden meine Daten gesichert?",
+          "answer": "Alle Daten werden bei der Übertragung (TLS) und im Ruhezustand verschlüsselt. Dateien werden sicher gespeichert und sind nur für Ihr Konto zugänglich. Wir sind DSGVO-konform."
+        },
+        {
+          "question": "Kann ich Berichte mit Kollegen teilen?",
+          "answer": "Ja! Sie können Berichte als PDF, Excel oder CSV exportieren und per E-Mail oder anderen Kanälen teilen. Team-Kollaborationsfunktionen sind geplant."
+        },
+        {
+          "question": "Welche Sprachen werden unterstützt?",
+          "answer": "Die Plattform ist auf Deutsch und Englisch verfügbar. Weitere Sprachen können basierend auf Nachfrage hinzugefügt werden."
+        },
+        {
+          "question": "Gibt es eine API?",
+          "answer": "Eine öffentliche API ist für zukünftige Versionen geplant. Kontaktieren Sie uns bei spezifischen Integrationsanforderungen."
+        }
+      ]
+    },
+    "documentation": {
+      "title": "Dokumentation",
+      "subtitle": "Technische Referenz und detaillierte Anleitungen",
+      "sections": {
+        "userGuide": {
+          "title": "Benutzerhandbuch",
+          "description": "Vollständige Anleitung für alle Plattformfunktionen"
+        },
+        "dataFormats": {
+          "title": "Datenformate",
+          "description": "Spezifikationen für unterstützte Dateiformate"
+        },
+        "security": {
+          "title": "Sicherheit & Datenschutz",
+          "description": "Wie wir Ihre Daten schützen"
+        }
+      },
+      "comingSoon": "Vollständige Dokumentation in Kürze verfügbar"
+    },
+    "support": {
+      "title": "Brauchen Sie weitere Hilfe?",
+      "subtitle": "Wir sind für Sie da",
+      "contact": "Support kontaktieren",
+      "email": "team@kamanjola.de"
     }
   }
 }
