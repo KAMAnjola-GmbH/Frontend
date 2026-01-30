@@ -25,6 +25,7 @@ export default function ImprintPage() {
       <main className="flex-grow py-16 md:py-20">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="prose prose-invert max-w-none">
+            
             {/* Company Information */}
             <section className="mb-12">
               <h2 className="text-2xl font-bold text-white mb-4">
@@ -32,9 +33,9 @@ export default function ImprintPage() {
               </h2>
               <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
                 <p className="text-gray-300 leading-relaxed">
-                  <strong className="text-white">r0sita GmbH</strong><br />
-                  Musterstrasse 123<br />
-                  12345 Berlin<br />
+                  <strong className="text-white">Kamanjola GmbH</strong><br />
+                  Dennewartstraße 25-27<br />
+                  52068 Aachen<br />
                   Deutschland
                 </p>
               </div>
@@ -46,7 +47,7 @@ export default function ImprintPage() {
                 {t('represented')}
               </h2>
               <p className="text-gray-300 leading-relaxed">
-                Geschäftsführer: [Name des Geschäftsführers]
+                Geschäftsführer: Dr.-Ing. Jules André Kengmogne Tchakam
               </p>
             </section>
 
@@ -56,10 +57,10 @@ export default function ImprintPage() {
                 {t('contact')}
               </h2>
               <p className="text-gray-300 leading-relaxed">
-                Telefon: +49 (0) 30 123456789<br />
+                Telefon: +49 (0)155 6170 5107<br />
                 E-Mail:{' '}
-                <a href="mailto:info@r0sita.com" className="text-cyan-400 hover:text-cyan-300 transition">
-                  info@r0sita.com
+                <a href="mailto:info@kamanjola.de" className="text-cyan-400 hover:text-cyan-300 transition">
+                  info@kamanjola.de
                 </a>
               </p>
             </section>
@@ -70,9 +71,9 @@ export default function ImprintPage() {
                 {t('register')}
               </h2>
               <p className="text-gray-300 leading-relaxed">
-                Eintragung im Handelsregister<br />
-                Registergericht: Amtsgericht Berlin-Charlottenburg<br />
-                Registernummer: HRB XXXXX
+                Eintragung im Handelsregister.<br />
+                Registergericht: Amtsgericht Aachen<br />
+                Registernummer: HRB 27364
               </p>
             </section>
 
@@ -83,7 +84,7 @@ export default function ImprintPage() {
               </h2>
               <p className="text-gray-300 leading-relaxed">
                 Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
-                DE XXXXXXXXX
+                DE 364735520
               </p>
             </section>
 
@@ -93,9 +94,9 @@ export default function ImprintPage() {
                 {t('responsible')}
               </h2>
               <p className="text-gray-300 leading-relaxed">
-                [Name des Verantwortlichen]<br />
-                Musterstrasse 123<br />
-                12345 Berlin
+                Dr.-Ing. Jules André Kengmogne Tchakam<br />
+                Dennewartstraße 25-27<br />
+                52068 Aachen
               </p>
             </section>
 

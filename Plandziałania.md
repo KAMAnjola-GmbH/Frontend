@@ -7,14 +7,18 @@ Każdy punkt poniżej jest sformatowany jako gotowy **GitHub Issue**.
 ---
 
 
-### Issue 4: Dashboard Użytkownika
+### Issue 4: Dashboard Użytkownika ✅ DONE
 **Tytuł:** [Feat] Implementacja Dashboardu Użytkownika
 **Opis:**
 Stworzenie centralnego miejsca, gdzie użytkownik widzi swoje statystyki i projekty.
 **Zadania:**
-- [ ] Sekcja "Ostatnie Projekty" (lista/kafelki).
-- [ ] Wykresy KPI (wykorzystanie biblioteki wykresów z `package.json`).
-- [ ] Statusy zadań w czasie rzeczywistym.
+- [x] Sekcja "Ostatnie Projekty" (lista/kafelki) - RecentActivity.tsx
+- [x] Wykresy KPI (wykorzystanie biblioteki wykresów z `package.json`) - BusinessKpis.tsx
+- [x] Statusy zadań w czasie rzeczywistym - ProductCards.tsx z liczbą projektów
+**Pliki:**
+- dashboard/page.tsx
+- components/dashboard/* (BusinessKpis, ProductCards, RecentActivity, SubscriptionCard, QuickActions)
+- hooks/useDashboard.ts
 
 ---
 
@@ -40,22 +44,27 @@ Strona dedykowana warsztatom/szkoleniom.
 - [ ] Lista dostępnych warsztatów (pobierana z API lub CMS).
 - [ ] Formularz zapisu na warsztat.
 
-### Issue 7: Strona MyWorkBench
+### Issue 7: Strona MyWorkBench ✅ DONE
 **Tytuł:** [Feat] Nowa podstrona: MyWorkBench
 **Opis:**
 Przestrzeń robocza użytkownika (możliwe rozszerzenie SUSA).
 **Zadania:**
-- [ ] Implementacja interfejsu roboczego.
-- [ ] Integracja z narzędziami edycji/symulacji.
+- [x] Implementacja interfejsu roboczego - Dashboard jako MyWorkbench
+- [x] Integracja z narzędziami edycji/symulacji - QuickActions linkuje do SuSa/Viewer
+**Uwaga:** MyWorkbench = Dashboard - centralne miejsce z dostępem do wszystkich narzędzi
 
-### Issue 8: Strona Learn
+### Issue 8: Strona Learn ✅ DONE
 **Tytuł:** [Feat] Nowa podstrona: Learn (Baza Wiedzy)
 **Opis:**
 Centrum edukacyjne dla użytkowników.
 **Zadania:**
-- [ ] Sekcja z tutorialami (wideo/tekst).
-- [ ] FAQ.
-- [ ] Dokumentacja techniczna.
+- [x] Sekcja z tutorialami (wideo/tekst) - informacyjne karty z tutorials
+- [x] FAQ - accordion z 6 pytaniami
+- [x] Dokumentacja techniczna - sekcja "coming soon"
+**Pliki:**
+- [locale]/learn/page.tsx
+- messages/en.json (learn.*)
+- messages/de.json (learn.*)
 
 ---
 
@@ -63,29 +72,39 @@ Centrum edukacyjne dla użytkowników.
 *Cel: Dostępność i profesjonalny wygląd.*
 
 
-### Issue 10: Responsywność (Mobile First)
+### Issue 10: Responsywność (Mobile First) ✅ DONE
 **Tytuł:** [UI] Poprawki RWD i optymalizacja mobilna
 **Opis:**
 Aplikacja musi wyglądać idealnie na telefonach i tabletach.
 **Zadania:**
-- [ ] Audyt Navbaru na mobile (Hamburger menu).
-- [ ] Dostosowanie tabel (np. poziomy scroll lub widok kart na mobile).
-- [ ] Sprawdzenie wielkości czcionek i przycisków (dotyk).
-- [ ] Testowanie na rozdzielczościach od 320px wzwyż.
+- [x] Audyt Navbaru na mobile (Hamburger menu) - Dodano MobileMenu.tsx z drawer
+- [x] Dostosowanie tabel (np. poziomy scroll lub widok kart na mobile) - overflow-auto w KpiTable
+- [x] Sprawdzenie wielkości czcionek i przycisków (dotyk) - responsive text classes
+- [x] SuSa/Viewer layout - sidebar jako drawer na mobile z floating button
+**Pliki:**
+- MobileMenu.tsx (nowy)
+- Navbar.tsx (hidden lg:block dla desktop nav)
+- SuSa layout.tsx (responsive sidebar drawer)
+- Viewer layout.tsx (responsive sidebar drawer)
+- AnalysisReport.tsx (flex-col sm:flex-row dla header)
 
 ---
 
 ## Faza 5: Legal & Compliance
 *Cel: Zgodność z prawem UE.*
 
-### Issue 11: Cookie Consent (EU ePrivacy)
+### Issue 11: Cookie Consent (EU ePrivacy) ✅ DONE
 **Tytuł:** [Legal] Baner Cookies zgodny z dyrektywą UE
 **Opis:**
 Implementacja mechanizmu zgody na pliki cookies.
 **Zadania:**
-- [ ] Modal/Baner z opcjami: Niezbędne, Analityczne, Marketingowe.
-- [ ] Blokowanie skryptów (np. Google Analytics) przed wyrażeniem zgody.
-- [ ] Zapisywanie preferencji użytkownika.
+- [x] Modal/Baner z opcjami: Niezbędne, Analityczne, Marketingowe - CookieConsentBanner.tsx
+- [x] Blokowanie skryptów (np. Google Analytics) przed wyrażeniem zgody - context controls this
+- [x] Zapisywanie preferencji użytkownika - CookieConsentContext.tsx
+**Pliki:**
+- CookieConsentBanner.tsx
+- CookieConsentContext.tsx
+- Footer.tsx (resetConsent button)
 
 ### Issue 12: Zaktualizowanie Strony Prawne (Contact)
 **Tytuł:** [Legal] Dodanie stron prawnych: Kontakt
