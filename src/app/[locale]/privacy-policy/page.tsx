@@ -74,13 +74,13 @@ export default function PrivacyPolicyPage() {
               </h2>
               <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 mb-4">
                 <p className="text-gray-300 leading-relaxed">
-                  <strong className="text-white">r0sita GmbH</strong><br />
-                  Musterstrasse 123<br />
-                  12345 Berlin<br />
-                  Deutschland<br /><br />
+                        <strong className="text-white">Kamanjola GmbH</strong><br />
+                  Dennewartstraße 25-27<br />
+                  52068 Aachen<br />
+                  Deutschland
                   E-Mail:{' '}
-                  <a href="mailto:datenschutz@r0sita.com" className="text-cyan-400 hover:text-cyan-300 transition">
-                    datenschutz@r0sita.com
+                  <a href="mailto:info@kamanjola.de" className="text-cyan-400 hover:text-cyan-300 transition">
+                    info@kamanjola.de
                   </a>
                 </p>
               </div>

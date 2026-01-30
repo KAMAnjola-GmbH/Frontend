@@ -25,12 +25,12 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ analysis }) => {
     return (
         <div className="flex flex-col flex-grow h-full gap-6">
             {/* Header and Download Links */}
-            <div className="flex-shrink-0 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg p-4 flex items-center justify-between">
+            <div className="flex-shrink-0 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h3 className="text-xl font-bold text-white">{t('analysis_title')}</h3>
-                    <p className="text-gray-400">{t('results_for', { title: reportTitle || 'Projekt' })}</p>
+                    <h3 className="text-lg sm:text-xl font-bold text-white">{t('analysis_title')}</h3>
+                    <p className="text-sm sm:text-base text-gray-400">{t('results_for', { title: reportTitle || 'Projekt' })}</p>
                 </div>
-                <div id="download-links-container" className="flex gap-3 justify-end">
+                <div id="download-links-container" className="flex flex-wrap gap-2 sm:gap-3 justify-start sm:justify-end">
                     <DownloadLinks resultFiles={resultFiles} />
                 </div>
             </div>
