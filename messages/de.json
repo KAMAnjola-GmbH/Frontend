@@ -63,6 +63,7 @@
     "industries": {
       "title": "Für die Industrie entwickelt",
       "subtitle": "Lösungen für Fertigung, Logistik und mehr",
+      "viewAll": "Alle Lösungen anzeigen",
       "items": [
         {
           "title": "Fertigung",
@@ -302,7 +303,57 @@
     "simulation_type": "Typ",
     "max_stress": "Max. Spannung",
     "min_stress": "Min. Spannung",
-    "avg_stress": "Durchschn. Spannung"
+    "avg_stress": "Durchschn. Spannung",
+    "trame": {
+      "title": "VTK Remote Rendering",
+      "refresh": "Aktualisieren",
+      "readyTitle": "VTK Remote Rendering",
+      "readyDescription": "Serverseitiges Rendering für komplexe wissenschaftliche Visualisierungen. Jeder Benutzer erhält seinen eigenen isolierten Rendering-Prozess.",
+      "launch": "VTK Viewer starten",
+      "note": "Eine neue Rendering-Sitzung wird für Sie erstellt.",
+      "loginRequired": "Anmeldung erforderlich",
+      "loginDescription": "Bitte melden Sie sich an, um auf den VTK-Visualisierungsdienst zuzugreifen.",
+      "login": "Anmelden"
+    }
+  },
+  "vtk": {
+    "title": "Wissenschaftliche Visualisierung",
+    "subtitle": "VTK Remote Rendering",
+    "description": "Erweiterte 3D-Visualisierung mit VTK. Serverseitiges Rendering für komplexe wissenschaftliche Daten, Simulationen und Echtzeit-Monitoring.",
+    "selectSource": "Datenquelle auswählen",
+    "comingSoon": "Demnächst",
+    "launch": "VTK Viewer starten",
+    "selectSourceFirst": "Bitte wählen Sie oben eine Datenquelle aus",
+    "sources": {
+      "upload": {
+        "title": "Dateien hochladen",
+        "description": "VTK, STL, OpenFOAM oder andere wissenschaftliche Datendateien hochladen"
+      },
+      "simulation": {
+        "title": "Simulationsergebnisse",
+        "description": "CFD, FEA oder andere Simulationsausgaben visualisieren"
+      },
+      "realtime": {
+        "title": "Echtzeit-Daten",
+        "description": "Mit Live-Sensordaten und IoT-Streams verbinden"
+      }
+    },
+    "upload": {
+      "title": "Wissenschaftliche Daten hochladen",
+      "dragDrop": "Dateien hierher ziehen oder klicken zum Durchsuchen",
+      "formats": "Unterstützt: VTK, VTI, VTP, STL, OBJ, PLY, OpenFOAM",
+      "note": "Hinweis: Datei-Upload zum VTK-Service ist in Entwicklung. Aktuell zeigt der Viewer eine Demo-Szene."
+    },
+    "info": {
+      "serverSide": {
+        "title": "Serverseitiges Rendering",
+        "description": "Aufwendige Berechnungen laufen auf unseren Servern. Ihr Browser zeigt das Ergebnis per Streaming an, was die Visualisierung von Datensätzen ermöglicht, die clientseitig unmöglich wären."
+      },
+      "useCases": {
+        "title": "Anwendungsfälle",
+        "description": "CFD-Simulationen, FEA-Spannungsanalyse, Offshore-Windpark-Monitoring, Drohneninspektionsdaten, Echtzeit-Sensorvisualisierung."
+      }
+    }
   },
   "profile": {
     "title": "Profileinstellungen",

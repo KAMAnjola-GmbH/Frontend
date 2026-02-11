@@ -6,10 +6,17 @@
 
 export const config = {
     // This is the URL base for the NEXT.JS API proxy, not the direct backend
-    apiProxyBaseUrl: '/api/proxy', 
+    apiProxyBaseUrl: '/api/proxy',
 
     // Viewer settings mock
     viewer: {
         initialCamera: { x: 0, y: 0, z: 10 },
+    },
+
+    // Trame VTK Remote Rendering
+    trame: {
+        // This URL is returned from the backend session endpoint
+        // Fallback for development: http://localhost:8081
+        defaultUrl: process.env.NEXT_PUBLIC_TRAME_URL || 'http://localhost:8081',
     },
 };

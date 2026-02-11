@@ -60,7 +60,7 @@ export default function HomePage() {
     const viewerFeatures = t.raw('products.viewer.features') as string[];
 
     return (
-        <div className="flex flex-col h-full w-full overflow-y-auto bg-slate-900">
+        <div className="flex flex-col w-full bg-slate-900">
 
             {/* === HERO SECTION === */}
             <section className="relative min-h-[85vh] flex items-center justify-center text-center overflow-hidden shrink-0">
@@ -234,7 +234,7 @@ export default function HomePage() {
                             href="/solutions"
                             className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium transition"
                         >
-                            View all solutions
+                            {t('industries.viewAll')}
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
@@ -244,11 +244,7 @@ export default function HomePage() {
             </section>
 
             {/* === VISION / ROADMAP === */}
-            <section className="py-20 bg-slate-900 relative z-10 overflow-hidden">
-                {/* Background decoration */}
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-cyan-500/5 to-purple-500/5 rounded-full blur-3xl" />
-                </div>
+            <section className="py-20 bg-slate-900 relative z-10">
 
                 <div className="max-w-4xl mx-auto px-4 relative">
                     <div className="text-center mb-12">

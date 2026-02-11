@@ -83,6 +83,13 @@ export default function MobileMenu() {
                                 >
                                     3D Viewer
                                 </Link>
+                                <Link
+                                    href="/products/vtk"
+                                    onClick={closeMenu}
+                                    className="block py-2 px-3 text-cyan-300 hover:bg-white/10 rounded-lg transition"
+                                >
+                                    Scientific Visualization (VTK)
+                                </Link>
                             </li>
 
                             <li className="pt-2">

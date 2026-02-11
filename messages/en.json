@@ -63,6 +63,7 @@
     "industries": {
       "title": "Built for Industry",
       "subtitle": "Solutions for manufacturing, logistics, and beyond",
+      "viewAll": "View all solutions",
       "items": [
         {
           "title": "Manufacturing",
@@ -302,7 +303,57 @@
     "simulation_type": "Type",
     "max_stress": "Max Stress",
     "min_stress": "Min Stress",
-    "avg_stress": "Average Stress"
+    "avg_stress": "Average Stress",
+    "trame": {
+      "title": "VTK Remote Rendering",
+      "refresh": "Refresh",
+      "readyTitle": "VTK Remote Rendering",
+      "readyDescription": "Server-side rendering for complex scientific visualizations. Each user gets their own isolated rendering process.",
+      "launch": "Launch VTK Viewer",
+      "note": "A new rendering session will be created for you.",
+      "loginRequired": "Login Required",
+      "loginDescription": "Please log in to access the VTK visualization service.",
+      "login": "Log In"
+    }
+  },
+  "vtk": {
+    "title": "Scientific Visualization",
+    "subtitle": "VTK Remote Rendering",
+    "description": "Advanced 3D visualization powered by VTK. Server-side rendering for complex scientific data, simulations, and real-time monitoring.",
+    "selectSource": "Select Data Source",
+    "comingSoon": "Coming Soon",
+    "launch": "Launch VTK Viewer",
+    "selectSourceFirst": "Please select a data source above",
+    "sources": {
+      "upload": {
+        "title": "Upload Files",
+        "description": "Upload VTK, STL, OpenFOAM or other scientific data files"
+      },
+      "simulation": {
+        "title": "Simulation Results",
+        "description": "Visualize CFD, FEA, or other simulation outputs"
+      },
+      "realtime": {
+        "title": "Real-time Data",
+        "description": "Connect to live sensor data and IoT streams"
+      }
+    },
+    "upload": {
+      "title": "Upload Scientific Data",
+      "dragDrop": "Drag and drop files here, or click to browse",
+      "formats": "Supported: VTK, VTI, VTP, STL, OBJ, PLY, OpenFOAM",
+      "note": "Note: File upload to VTK service is in development. For now, the viewer shows a demo scene."
+    },
+    "info": {
+      "serverSide": {
+        "title": "Server-Side Rendering",
+        "description": "Heavy computations run on our servers. Your browser displays the result via streaming, enabling visualization of datasets that would be impossible client-side."
+      },
+      "useCases": {
+        "title": "Use Cases",
+        "description": "CFD simulations, FEA stress analysis, offshore wind farm monitoring, drone inspection data, real-time sensor visualization."
+      }
+    }
   },
   "profile": {
     "title": "Profile Settings",
